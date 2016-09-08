@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<!-- 引入外部CSS源 -->
+<link href="https://fonts.gdgdocs.com/css?family=Lobster"
+	rel="stylesheet" type="text/css">
+<style>
+<!--
+元素选择器 -->h1 {
+	color: blue;
+}
+
+<!--
+类选择器 -->.blue-text {
+	color: blue; <!--
+	字体自动降级，如果没有Lobster，自动设置为Monospace --> font-family: Lobster, Monospace;
+}
+
+.smaller-image {
+	width: 100px;
+}
+
+<!-- 颜色的几种表示方法：1、英文单词；2、6位16进制RGB：#000000；3、3位16进制RGB：#F00；4、10进制RGB：rgb(0, 0, 0)： -->
+.thin-green-border {
+	border-color: green;
+	border-width: 10px;
+	border-style: solid;
+}
+
+<!-- ID选择器，自动作用于样式同名的id对象 -->
+#cat-photo-form {
+	background-color: green;
+}
+</style>
+</head>
+<body bgcolor="#ffffff">
+	<!-- 标题+超链接 -->
+	<h1>My git account is cnmoon</h1>
+	project url is
+	<a href=https://github.com/cnmoon/HTMLStudy.git>here</a>
+	<h2 style="color: blue">我家的猫咪</h2>
+
+	<!-- 同一个元素使用2个以上的css -->
+	<p class="blue-text thin-green-border">在大家心目中，猫是慵懒的可爱的化身，它可以睡饱了再起来吃饭，可以逗趣小耗子，可以卖得了萌，使得了坏，这样百变的小怪兽就集结在一只宠物上，怎能不惹人怜爱。</p>
+
+
+	<a href="#"><img class="smaller-image thick-green-border"
+		alt="A cute orange cat lying on its back"
+		src="/images/relaxing-cat.jpg"></a>
+
+
+	
+	<!-- 以图层为单位，向下设置可继承的样式 -->
+	<div>
+	<!-- 有序列表和无序列表 -->
+	<p>Things cats love:</p>
+	<ul>
+		<li>cat nip</li>
+		<li>laser pointers</li>
+		<li>lasagna</li>
+	</ul>
+	<p>Top 3 things cats hate:</p>
+	<ol>
+		<li>flea treatment</li>
+		<li>thunder</li>
+		<li>other cats</li>
+	</ol>
+	</div>
+
+
+	<!-- 表单：单选、复选、文本框、提交按钮 -->
+	<form action="/submit-cat-photo" id="cat-photo-form">
+		<label><input type="radio" name="indoor-outdoor" checked>
+			Indoor</label> <label><input type="radio" name="indoor-outdoor">
+			Outdoor</label> <label><input type="checkbox" name="personality"
+			checked> Loving</label> <label><input type="checkbox"
+			name="personality"> Lazy</label> <label><input
+			type="checkbox" name="personality"> Energetic</label> <input
+			type="text" placeholder="cat photo URL" required>
+		<button type="submit">Submit</button>
+	</form>
+
+
+</body>
+</html>
