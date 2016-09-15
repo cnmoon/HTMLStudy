@@ -4,8 +4,11 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/><script src="http://code.jquery.com/jquery-latest.js"></script>
+<link rel="stylesheet"
+	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
+<link rel="stylesheet"
+	href="http://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+<script src="http://code.jquery.com/jquery-latest.js"></script>
 
 <!-- 引用jQuery库 -->
 <script src="http://code.jquery.com/jquery-latest.js"></script>
@@ -21,54 +24,49 @@
 		$("button").addClass("animated bounce");
 		//所有包含well class的元素
 		$(".well").addClass("animated shake");
-		
+
 		//第一个包含well class的元素
 		$($(".well")[0]);
-		
+
 		//id为target3的元素
 		$("#target3").addClass("animated fadeOut");
 
 		//改变目标的css样式，这跟通常的CSS语法有点不同，这里CSS的属性和值是在引号内的，并且用逗号分开。
 		$("#target1").css("color", "blue");
 
-		
-		
 		//改变目标的属性
 		$("#target1").prop("disabled", true);
 
 		//设置目标中的html标签
 		$("#target4").html("<em>#target4</em>");
-		
+
 		//设置目标中的文本。参数中如果出现html标签也会当做文本显示
 		$("#target4").text("#target4");
 		//在目标文本中，附加参数给出的文本内容。
 		$("#target1").append("append text");
 
-		
 		//删除对象
 		$("#target4").remove();
-		
+
 		//移动界面元素或对象
 		$("#target2").appendTo("#right-well");
-		
+
 		//克隆一个对象，clone出来的对象id与原对象相同
 		$("#target5").clone().appendTo("#left-well");
-		
+
 		//设置对象的属性.attr('id','id-value')
-		
-		
+
 		//获取一个对象的上一层html对象
-		$("#target1").parent().css("background-color","red");
-		
+		$("#target1").parent().css("background-color", "red");
+
 		//获取一个对象的所有子对象
 		$("#right-well").children().css("color", "orange")
-		
+
 		//获取一个具有指定类型class的列表（本例为target，并选定列表中的第n个元素。索引从0开始。
 		$(".target:nth-child(2)").addClass("animated bounce");
-		
+
 		//获得索引为奇/偶数数的元素列表：$(".target:odd") / $(".target:even")
 
-		
 		//其他有用的动画：animate fadeOut、animate hinge。
 	});
 </script>

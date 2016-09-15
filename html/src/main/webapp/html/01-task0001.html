@@ -7,29 +7,31 @@
 <link href="https://fonts.gdgdocs.com/css?family=Lobster"
 	rel="stylesheet" type="text/css">
 <style>
-<!--
-元素选择器 -->h1 {
+/* 元素选择器 */
+h1 {
 	color: blue;
 }
 
-<!--
-类选择器 -->.blue-text {
-	color: blue; <!--
-	字体自动降级，如果没有Lobster，自动设置为Monospace --> font-family: Lobster, Monospace;
+/* 类选择器 */
+.blue-text {
+	color: blue;
+	/* 字体自动降级，如果没有Lobster，自动设置为Monospace */
+	font-family: Lobster, Monospace;
 }
 
 .smaller-image {
 	width: 100px;
 }
 
-<!-- 颜色的几种表示方法：1、英文单词；2、6位16进制RGB：#000000；3、3位16进制RGB：#F00；4、10进制RGB：rgb(0, 0, 0)： -->
+/* 颜色的几种表示方法：1、英文单词；2、6位16进制RGB：#000000；3、3位16进制RGB：#F00；4、10进制RGB：rgb (0,
+	0, 0)： */
 .thin-green-border {
 	border-color: green;
 	border-width: 10px;
 	border-style: solid;
 }
 
-<!-- ID选择器，自动作用于样式同名的id对象 -->
+/* ID选择器，自动作用于样式同名的id对象 */
 #cat-photo-form {
 	background-color: green;
 }
@@ -51,22 +53,22 @@
 		src="/images/relaxing-cat.jpg"></a>
 
 
-	
+
 	<!-- 以图层为单位，向下设置可继承的样式 -->
 	<div>
-	<!-- 有序列表和无序列表 -->
-	<p>Things cats love:</p>
-	<ul>
-		<li>cat nip</li>
-		<li>laser pointers</li>
-		<li>lasagna</li>
-	</ul>
-	<p>Top 3 things cats hate:</p>
-	<ol>
-		<li>flea treatment</li>
-		<li>thunder</li>
-		<li>other cats</li>
-	</ol>
+		<!-- 有序列表和无序列表 -->
+		<p>Things cats love:</p>
+		<ul>
+			<li>cat nip</li>
+			<li>laser pointers</li>
+			<li>lasagna</li>
+		</ul>
+		<p>Top 3 things cats hate:</p>
+		<ol>
+			<li>flea treatment</li>
+			<li>thunder</li>
+			<li>other cats</li>
+		</ol>
 	</div>
 
 
@@ -81,7 +83,5 @@
 			type="text" placeholder="cat photo URL" required>
 		<button type="submit">Submit</button>
 	</form>
-
-
 </body>
 </html>

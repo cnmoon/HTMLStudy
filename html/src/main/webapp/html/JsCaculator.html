@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>JS Calculator</title>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
+<style>
+.css_fomu {
+	
+}
+</style>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script>
+	$ (document).ready (function () {
+	    var fomulateStr = "";
+	    
+	    $ (".css_fomu").on ("click", function (e) {
+		    var tfomulateStr = fomulateStr + $ (e.currentTarget).text ();
+		    
+		    var regStr = "";
+		    regStr += '^';
+		    //第一个数字，可以以负号开头
+		    regStr += '(-(?![\\+\\-\\*\\/\\%])' + //在输入过程中，可以出现单独的负号，需要避免负号后出现下一个数字前的运算符
+		    '|(-{0,1}\\d{1,}\\.{0,1}\\d{0,}))'; //带/不带负号的数字 
+		    
+		    regStr += '(([\\+\\-\\*\\/\\%](?![\\+\\-\\*\\/\\%])){0,1}' + //运算符（类似的，不允许跟下一个运算符）
+		    '|([\\+\\-\\*\\/\\%]\\d{1,}\\.{0,1}\\d{0,})){0,}'; //后续跟的其他数字
+		    
+		    regStr += '$';
+		    reg = new RegExp (regStr, 'g');
+		    
+		    if (tfomulateStr.match (reg) !== null){
+			    fomulateStr = tfomulateStr;
+			    $ ("#ipt_show").val (fomulateStr);
+			    $ ("#ipt_show").css ("border-color", "");
+		    }
+		    else{
+			    $ ("#ipt_show").css ("border-color", "red");
+		    }
+	    })
+
+	    $ ("#btn_ac").on ("click", function (e) {
+		    fomulateStr = "";
+		    $ ("#ipt_show").val (fomulateStr);
+	    })
+
+	    $ ("#btn_ce").on ("click", function (e) {
+		    fomulateStr = "CE";
+		    $ ("#ipt_show").val (fomulateStr);
+	    })
+
+	    $ ("#btn_equ").on ("click", function (e) {
+		    var numbers = [];
+		    
+		    var operators = [];
+		    fomulateStr = "EQU";
+		    $ ("#ipt_show").val (fomulateStr);
+	    })
+
+    });
+</script>
+</head>
+<body>
+
+    <div>Title of the Calculator</div>
+    <div>
+        <input type="text" id="ipt_show" value="">
+    </div>
+    <div>
+        <button class="btn" id="btn_ac">AC</button>
+        <button class="btn" id="btn_ce">CE</button>
+        <button class="btn css_fomu" id="btn_mod">%</button>
+        <button class="btn css_fomu" id="btn_divide">/</button>
+        <br>
+        <button class="btn css_fomu" id="btn_7">7</button>
+        <button class="btn css_fomu" id="btn_8">8</button>
+        <button class="btn css_fomu" id="btn_9">9</button>
+        <button class="btn css_fomu" id="btn_mult">*</button>
+        <br>
+        <button class="btn css_fomu" id="btn_4">4</button>
+        <button class="btn css_fomu" id="btn_5">5</button>
+        <button class="btn css_fomu" id="btn_6">6</button>
+        <button class="btn css_fomu" id="btn_min">-</button>
+        <br>
+        <button class="btn css_fomu" id="btn_1">1</button>
+        <button class="btn css_fomu" id="btn_2">2</button>
+        <button class="btn css_fomu" id="btn_3">3</button>
+        <button class="btn css_fomu" id="btn_add">+</button>
+        <br>
+        <button class="btn css_fomu" id="btn_point">.</button>
+        <button class="btn css_fomu" id="btn_0">0</button>
+        <button class="btn" id="btn_equ">=</button>
+    </div>
+</body>
+</html>
