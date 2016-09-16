@@ -3,21 +3,92 @@
 <head>
 <meta charset="UTF-8">
 <title>JS Calculator</title>
-
+<!--
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
-<!-- 
- <link rel="stylesheet" href="./resources/bootstrap.min.css" />
--->
+ -->
+<link rel="stylesheet" href="../../resources/bootstrap.min.css" />
+
 <style>
-.css_fomu {
-	
+
+
+html, body {
+	height: 100%;
+	width: 100%;
+	background-color: #F1F1F1;
+}
+
+#calculator {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	width: 350px;
+	height: 420px;
+	border-radius: 15px;
+	background-color: #37A0DF;
+	border-radius: 15px;
+}
+
+h4 {
+	margin-left: auto;
+	margin-right: auto;
+	font-family: 'Brush Script MT';
+	color: #FFFFFF;
+	font-size: 26px;
+	padding-top: 20px;
+}
+
+input {
+	margin-left: auto;
+	margin-right: auto;
+    margin-bottom: 5px;
+    padding-right:5px;
+    padding-left:5px;
+	text-align: right;
+	font-size: 25px;
+	color: #444444;
+	width: 318px;
+	height: 40px;
+}
+
+button {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
+	background: #424959;
+	color: white;
+	width: 75px;
+	height: 50px;
+	width: 75px;
+	width: 75px
+}
+
+.btn_cal {
+	background: #F67B14;
+}
+
+#btn_ac {
+	width: 155px;
+}
+
+#btn_add {
+	height: 110px;
+}
+
+.div_bottom4 {
+	float: left;
+	margin-left: 4px;
+}
+
+#div_bottomleft {
+	margin-left: 19px;
 }
 </style>
 
-<script src="http://code.jquery.com/jquery-latest.js"></script>
 <!-- 
- <script src="./resources/jquery-latest.js"></script>
- -->
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+-->
+<script src="../../resources/jquery-latest.js"></script>
+
 <script>
 	$ (document).ready (function () {
 	    var fomulateStr = "";
@@ -41,9 +112,14 @@
 			    fomulateStr = tfomulateStr;
 			    $ ("#ipt_show").val (fomulateStr);
 			    $ ("#ipt_show").css ("border-color", "");
+			    $ ("#ipt_show").css ("border-style", "none");
+
 		    }
 		    else{
-			    $ ("#ipt_show").css ("border-color", "red");
+		    	
+			    $ ("#ipt_show").css ("border-style", "solid");
+			    $ ("#ipt_show").css ("border-width", "1px");
+			    $ ("#ipt_show").css ("border-color", "#B94A4A #B94A4A #B94A4A #B94A4A");
 		    }
 	    });
 	    
@@ -83,9 +159,10 @@
 		    var i = 0;
 		    //第一轮遍历乘、除、余运算符。
 		    while (i < operators.length){
+			    //需要做一些乘方工作，以解决二进制精度问题
 			    var powa = getNumberAfterPoint (numbers[i]);
 			    var powb = getNumberAfterPoint (numbers[i + 1]);
-			    var powmax = Math.max(powa, powb);
+			    var powmax = Math.max (powa, powb);
 			    
 			    var numbera;
 			    var numberb;
@@ -101,7 +178,7 @@
 					    operators.splice (i, 1);
 					    break;
 				    case '/':
-				    	numbera = Math.round (numbers[i] * Math.pow (10, powmax));
+					    numbera = Math.round (numbers[i] * Math.pow (10, powmax));
 					    numberb = Math.round (numbers[i + 1] * Math.pow (10, powmax));
 					    
 					    numbers[i + 1] = numbera / numberb;
@@ -109,7 +186,7 @@
 					    operators.splice (i, 1);
 					    break;
 				    case '%':
-				    	numbera = Math.round (numbers[i] * Math.pow (10, powmax));
+					    numbera = Math.round (numbers[i] * Math.pow (10, powmax));
 					    numberb = Math.round (numbers[i + 1] * Math.pow (10, powmax));
 					    
 					    numbers[i + 1] = numbera % numberb / Math.pow (10, powmax);
@@ -127,15 +204,14 @@
 		    while (i < operators.length){
 			    var powa = getNumberAfterPoint (numbers[i]);
 			    var powb = getNumberAfterPoint (numbers[i + 1]);
-			    var powmax = Math.max(powa, powb);
+			    var powmax = Math.max (powa, powb);
 			    
 			    var numbera;
 			    var numberb;
-		    	numbera = Math.round (numbers[i] * Math.pow (10, powmax));
+			    numbera = Math.round (numbers[i] * Math.pow (10, powmax));
 			    numberb = Math.round (numbers[i + 1] * Math.pow (10, powmax));
 			    
 			    switch (operators[i]) {
-
 				    
 				    case '+':
 					    numbers[i + 1] = (numbera + numberb) / Math.pow (10, powmax);
@@ -174,34 +250,83 @@
 </script>
 </head>
 <body>
+    <div id="calculator">
+        <h4>CNMOON's Calculator</h4>
+        <div>
+            <input type="text" id="ipt_show" value="" readonly>
+        </div>
 
-    <div>Title of the Calculator</div>
-    <div>
-        <input type="text" id="ipt_show" value="">
-    </div>
-    <div>
-        <button class="btn" id="btn_ac">AC</button>
-        <button class="btn css_fomu" id="btn_mod">%</button>
-        <button class="btn css_fomu" id="btn_divide">/</button>
-        <br>
-        <button class="btn css_fomu" id="btn_7">7</button>
-        <button class="btn css_fomu" id="btn_8">8</button>
-        <button class="btn css_fomu" id="btn_9">9</button>
-        <button class="btn css_fomu" id="btn_mult">*</button>
-        <br>
-        <button class="btn css_fomu" id="btn_4">4</button>
-        <button class="btn css_fomu" id="btn_5">5</button>
-        <button class="btn css_fomu" id="btn_6">6</button>
-        <button class="btn css_fomu" id="btn_min">-</button>
-        <br>
-        <button class="btn css_fomu" id="btn_1">1</button>
-        <button class="btn css_fomu" id="btn_2">2</button>
-        <button class="btn css_fomu" id="btn_3">3</button>
-        <button class="btn css_fomu" id="btn_add">+</button>
-        <br>
-        <button class="btn css_fomu" id="btn_point">.</button>
-        <button class="btn css_fomu" id="btn_0">0</button>
-        <button class="btn" id="btn_equ">=</button>
+        <div>
+            <div class="div_bottom4" id="div_bottomleft">
+                <button class="btn btn_cal" id="btn_ac">AC</button>
+            </div>
+            <div class="div_bottom4">
+                <button class="btn btn_cal css_fomu" id="btn_mod">%</button>
+            </div>
+            <div class="div_bottom4">
+                <button class="btn btn_cal css_fomu" id="btn_divide">/</button>
+            </div>
+        </div>
+        <div>
+            <div class="div_bottom4" id="div_bottomleft">
+                <div>
+                    <button class="btn css_fomu" id="btn_7">7</button>
+                </div>
+                <div>
+                    <button class="btn css_fomu" id="btn_4">4</button>
+                </div>
+
+                <div>
+                    <button class="btn css_fomu" id="btn_1">1</button>
+                </div>
+                <div>
+                    <button class="btn css_fomu" id="btn_point">.</button>
+                </div>
+            </div>
+            <div class="div_bottom4">
+                <div>
+                    <button class="btn css_fomu" id="btn_8">8</button>
+                </div>
+                <div>
+                    <button class="btn css_fomu" id="btn_5">5</button>
+                </div>
+                <div>
+                    <button class="btn css_fomu" id="btn_2">2</button>
+                </div>
+                <div>
+                    <button class="btn css_fomu" id="btn_0">0</button>
+                </div>
+            </div>
+            <div class="div_bottom4">
+                <div>
+                    <button class="btn css_fomu" id="btn_9">9</button>
+
+                </div>
+                <div>
+                    <button class="btn css_fomu" id="btn_6">6</button>
+
+                </div>
+                <div>
+                    <button class="btn css_fomu" id="btn_3">3</button>
+                </div>
+                <div>
+
+                    <button class="btn" id="btn_equ">=</button>
+
+                </div>
+            </div>
+            <div class="div_bottom4">
+                <div>
+                    <button class="btn btn_cal css_fomu" id="btn_mult">*</button>
+                </div>
+                <div>
+                    <button class="btn btn_cal css_fomu" id="btn_min">-</button>
+                </div>
+                <div>
+                    <button class="btn btn_cal css_fomu" id="btn_add">+</button>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
