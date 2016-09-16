@@ -3,13 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <title>JS Calculator</title>
+
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
+<!-- 
+ <link rel="stylesheet" href="./resources/bootstrap.min.css" />
+-->
 <style>
 .css_fomu {
 	
 }
 </style>
+
 <script src="http://code.jquery.com/jquery-latest.js"></script>
+<!-- 
+ <script src="./resources/jquery-latest.js"></script>
+ -->
 <script>
 	$ (document).ready (function () {
 	    var fomulateStr = "";
@@ -37,27 +45,132 @@
 		    else{
 			    $ ("#ipt_show").css ("border-color", "red");
 		    }
-	    })
-
+	    });
+	    
 	    $ ("#btn_ac").on ("click", function (e) {
 		    fomulateStr = "";
 		    $ ("#ipt_show").val (fomulateStr);
-	    })
-
-	    $ ("#btn_ce").on ("click", function (e) {
-		    fomulateStr = "CE";
-		    $ ("#ipt_show").val (fomulateStr);
-	    })
-
+	    });
+	    
 	    $ ("#btn_equ").on ("click", function (e) {
-		    var numbers = [];
+		    var numbers = fomulateStr.split (/[\+\-\*\/\%]/);
+		    var operators = fomulateStr.match (/[\+\-\*\/\%]/g);
 		    
-		    var operators = [];
-		    fomulateStr = "EQU";
-		    $ ("#ipt_show").val (fomulateStr);
-	    })
+		    if (!numbers || numbers.length <= 1){
+			    return;
+		    }
+		    
+		    numbers = numbers.map (function (val) {
+			    if (val.match (/\./g)){
+				    return parseFloat (val);
+			    }
+			    else{
+				    return parseInt (val);
+			    }
+		    });
+		    
+		    //如果第一个运算符是-号，将第一数字改为负数。同时将第一个运算符删除。
+		    if (fomulateStr.indexOf ('-') === 0){
+			    numbers[0] = -1 * numbers[0];
+			    operators.slice (0, 1);
+		    }
+		    
+		    //去除第一个负号后，如果剩余运算符和数字数量一致，表示会多余最后一个运算符，该运算符无用，直接剔除。
+		    if (operators.length === numbers.length){
+			    operators.pop ();
+		    }
+		    
+		    var i = 0;
+		    //第一轮遍历乘、除、余运算符。
+		    while (i < operators.length){
+			    var powa = getNumberAfterPoint (numbers[i]);
+			    var powb = getNumberAfterPoint (numbers[i + 1]);
+			    var powmax = Math.max(powa, powb);
+			    
+			    var numbera;
+			    var numberb;
+			    
+			    switch (operators[i]) {
+				    case '*':
+					    numbera = Math.round (numbers[i] * Math.pow (10, powa));
+					    numberb = Math.round (numbers[i + 1] * Math.pow (10, powb));
+					    
+					    numbers[i + 1] = numbera * numberb / Math.pow (10, powa + powb);
+					    
+					    numbers.splice (i, 1);
+					    operators.splice (i, 1);
+					    break;
+				    case '/':
+				    	numbera = Math.round (numbers[i] * Math.pow (10, powmax));
+					    numberb = Math.round (numbers[i + 1] * Math.pow (10, powmax));
+					    
+					    numbers[i + 1] = numbera / numberb;
+					    numbers.splice (i, 1);
+					    operators.splice (i, 1);
+					    break;
+				    case '%':
+				    	numbera = Math.round (numbers[i] * Math.pow (10, powmax));
+					    numberb = Math.round (numbers[i + 1] * Math.pow (10, powmax));
+					    
+					    numbers[i + 1] = numbera % numberb / Math.pow (10, powmax);
+					    numbers.splice (i, 1);
+					    operators.splice (i, 1);
+					    break;
+				    default:
+					    i++;
+					    break;
+			    }
+		    }
+		    
+		    //第二轮遍历加、减运算符。
+		    i = 0;
+		    while (i < operators.length){
+			    var powa = getNumberAfterPoint (numbers[i]);
+			    var powb = getNumberAfterPoint (numbers[i + 1]);
+			    var powmax = Math.max(powa, powb);
+			    
+			    var numbera;
+			    var numberb;
+		    	numbera = Math.round (numbers[i] * Math.pow (10, powmax));
+			    numberb = Math.round (numbers[i + 1] * Math.pow (10, powmax));
+			    
+			    switch (operators[i]) {
 
+				    
+				    case '+':
+					    numbers[i + 1] = (numbera + numberb) / Math.pow (10, powmax);
+					    numbers.splice (i, 1);
+					    operators.splice (i, 1);
+					    break;
+				    case '-':
+					    numbers[i + 1] = (numbera - numberb) / Math.pow (10, powmax);
+					    numbers.splice (i, 1);
+					    operators.splice (i, 1);
+					    break;
+				    default:
+					    i++;
+					    break;
+			    }
+		    }
+		    fomulateStr = numbers[0];
+		    $ ("#ipt_show").val (fomulateStr);
+		    
+	    });
+	    
     });
+    
+    function getNumberAfterPoint (num) {
+	    var strNum = num.toString ();
+	    var pointPosition = strNum.indexOf ('.');
+	    if (pointPosition >= 0){
+		    
+		    return strNum.length - pointPosition - 1;
+	    }
+	    else{
+		    return 0;
+	    }
+	    
+    }
 </script>
 </head>
 <body>
@@ -68,7 +181,6 @@
     </div>
     <div>
         <button class="btn" id="btn_ac">AC</button>
-        <button class="btn" id="btn_ce">CE</button>
         <button class="btn css_fomu" id="btn_mod">%</button>
         <button class="btn css_fomu" id="btn_divide">/</button>
         <br>
