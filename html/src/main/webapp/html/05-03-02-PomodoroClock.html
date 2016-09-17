@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Pomodoro Clock</title>
+
+<link rel="stylesheet" href="../../resources/bootstrap.min.css" />
+<style type="text/css">
+html, body {
+	height: 100%;
+	width: 100%;
+	background-color: #F1F1F1;
+}
+
+#clock {
+	margin: 0px auto;
+	width: 350px;
+	height: 230px;
+	border-radius: 15px;
+	background-color: #37A0DF;
+}
+
+h4 {
+	margin-left: auto;
+	margin-right: auto;
+	font-family: 'Brush Script MT';
+	color: #FFFFFF;
+	font-size: 26px;
+	padding-top: 20px;
+	text-align: center;
+}
+
+.settimepannel {
+	display: flex;
+	background: #FFFFFF;
+	margin: 10px;
+	padding: 5px;
+	border-radius: 15px;
+}
+
+.settimesubpannel {
+	display: inline;
+	text-align: center;
+	margin: 0 auto;
+}
+
+.showtimepannel {
+	background: #FFFFFF;
+	width: 100px;
+	margin: 0 auto;
+	padding: 5px;
+	border-radius: 15px;
+}
+
+#timetype {
+	text-align: center;
+}
+
+#timevalue {
+	text-align: center;
+}
+
+#controlbtndiv {
+	text-align: center;
+}
+
+.timesetinput {
+	width: 20px;
+	border: none;
+	text-align: center;
+}
+</style>
+
+<script src="../../resources/jquery-latest.js"></script>
+
+<script>
+	$ (document).ready (function () {
+	    var worktime = 25;
+	    var resttime = 5;
+	    var status = false; //false表示没有在计时，true表示正在计时。
+	    
+	    var worktimer;
+	    var resttimer;
+	    var leftworkseconds = 0;
+	    var leftrestseconds = 0;
+	    
+	    $ ("#controlbtn").on ("click", function () {
+		    if (status === false){
+			    
+			    status = true;
+			    
+			    //禁用4个增加减少时间按钮
+			    $ ("#worktimeplus").attr ({
+				    "disabled" : "disabled"
+			    });
+			    $ ("#worktimeminus").attr ({
+				    "disabled" : "disabled"
+			    });
+			    $ ("#resttimeplus").attr ({
+				    "disabled" : "disabled"
+			    });
+			    $ ("#resttimeminus").attr ({
+				    "disabled" : "disabled"
+			    });
+			    
+			    //将按钮修改为“重置”
+			    $ ("#controlbtn").text ("重置");
+			    
+			    //启动工作计时器
+			    leftworkseconds = worktime * 60;
+			    leftrestseconds = resttime * 60;
+			    worktimer = window.setInterval (function () {
+				    leftworkseconds--;
+				    //更新timevalue值
+				    var leftminutes = Math.floor (leftworkseconds / 60);
+				    var leftseconds = Math.floor (leftworkseconds % 60);
+				    
+				    if (leftminutes < 10){
+					    leftminutes = "0" + leftminutes;
+				    }
+				    if (leftseconds < 10){
+					    leftseconds = "0" + leftseconds;
+				    }
+				    $ ("#timevalue").text (leftminutes + ":" + leftseconds);
+				    
+				    //工作计时器完成工作时间后，，
+				    if (leftworkseconds <= 0){
+					    //关闭工作定时器
+					    window.clearInterval (worktimer);
+					    
+					    //将timetype修改为休息时间
+					    $ ("#timetype").text ("休息时间");
+					    
+					    //启动休息时间计时器
+					    resttimer = window.setInterval (function () {
+						    leftrestseconds--;
+						    //更新timevalue值
+						    var leftminutes = Math.floor (leftrestseconds / 60);
+						    var leftseconds = Math.floor (leftrestseconds % 60);
+						    
+						    if (leftminutes < 10){
+							    leftminutes = "0" + leftminutes;
+						    }
+						    if (leftseconds < 10){
+							    leftseconds = "0" + leftseconds;
+						    }
+						    $ ("#timevalue").text (leftminutes + ":" + leftseconds);
+						    //工作计时器完成工作时间后，，
+						    if (leftrestseconds <= 0){
+							    //关闭休息定时器
+							    window.clearInterval (resttimer);
+							    //完成后，将timetype修改为工作时间
+							    
+							    //启用4个增加减少时间按钮
+							    $ ("#worktimeplus").removeAttr ("disabled");
+							    $ ("#worktimeminus").removeAttr ("disabled");
+							    $ ("#resttimeplus").removeAttr ("disabled");
+							    $ ("#resttimeminus").removeAttr ("disabled");
+							    
+							    //将按钮修改为“开始”
+							    $ ("#controlbtn").text ("开始");
+							    status = false;
+						    }
+						    
+					    }, 1000);
+					    
+				    }
+				    
+			    }, 1000);
+			    
+		    }
+		    else{
+			    status = false;
+			    //关闭定时器
+			    window.clearInterval (worktimer);
+			    window.clearInterval (resttimer);
+			    
+			    //启用4个增加减少时间按钮
+			    $ ("#worktimeplus").removeAttr ("disabled");
+			    $ ("#worktimeminus").removeAttr ("disabled");
+			    $ ("#resttimeplus").removeAttr ("disabled");
+			    $ ("#resttimeminus").removeAttr ("disabled");
+			    //将按钮修改为“开始”
+			    $ ("#controlbtn").text ("开始");
+			    
+			    //修改显示的时间值
+			    if (worktime >= 10){
+				    $ ("#timevalue").text (worktime + ":00");
+			    }
+			    else{
+				    $ ("#timevalue").text ("0" + worktime + ":00");
+			    }
+			    
+		    }
+	    });
+	    
+	    $ ("#worktimeplus").on ("click", function () {
+		    if (worktime === 99){
+			    return;
+		    }
+		    worktime = parseInt ($ ("#worktime").val ()) + 1;
+		    $ ("#worktime").val (worktime);
+		    
+		    if (worktime >= 10){
+			    $ ("#timevalue").text (worktime + ":00");
+		    }
+		    else{
+			    $ ("#timevalue").text ("0" + worktime + ":00");
+		    }
+		    
+	    });
+	    
+	    $ ("#worktimeminus").on ("click", function () {
+		    if (worktime === 0){
+			    return;
+		    }
+		    worktime = parseInt ($ ("#worktime").val ()) - 1;
+		    $ ("#worktime").val (worktime);
+		    
+		    if (worktime >= 10){
+			    $ ("#timevalue").text (worktime + ":00");
+		    }
+		    else{
+			    $ ("#timevalue").text ("0" + worktime + ":00");
+		    }
+	    });
+	    
+	    $ ("#resttimeplus").on ("click", function () {
+		    if (resttime === 99){
+			    return;
+		    }
+		    resttime = parseInt ($ ("#resttime").val ()) + 1;
+		    $ ("#resttime").val (resttime);
+	    });
+	    
+	    $ ("#resttimeminus").on ("click", function () {
+		    if (resttime === 0){
+			    return;
+		    }
+		    resttime = parseInt ($ ("#resttime").val ()) - 1;
+		    $ ("#resttime").val (resttime);
+		    
+	    });
+    });
+</script>
+</head>
+<body>
+    <div id="clock">
+        <h4>CNMOON's Clock</h4>
+
+        <div class="settimepannel">
+            <div class="settimesubpannel">
+                <div>工作时间</div>
+                <div>
+                    <button id="worktimeminus" class="btn">-</button>
+                    <input id="worktime" class="timesetinput" value="25" readonly>
+                    <button id="worktimeplus" class="btn">+</button>
+                </div>
+            </div>
+            <div class="settimesubpannel">
+                <div>休息时间</div>
+                <div>
+                    <button id="resttimeminus" class="btn">-</button>
+                    <input id="resttime" class="timesetinput" value="5" readonly>
+                    <button id="resttimeplus" class="btn">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="showtimepannel">
+            <div id="timetype">工作时间</div>
+            <div id="timevalue">25:00</div>
+            <div id="controlbtndiv">
+                <button id="controlbtn" class="btn">开始</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
