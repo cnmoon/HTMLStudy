@@ -189,7 +189,7 @@ h4 {
 			            }
 		            }
 		            if (maxPoint >= 0){
-		            	return maxPoint;
+			            return maxPoint;
 		            }
 		            
 		            //选择方向上点数最少的点落子
@@ -314,11 +314,11 @@ h4 {
 		            }
 		            
 		            if (gameresult[0] === "computer"){
-			            $ ("#cheerupdialog").attr ("title", "You Lose!");
+			            $ ("#cheerupdialog").attr ("title", "游戏结束");
 			            $ ("#cheerupdialog").text ("你输了！");
 		            }
 		            else{
-			            $ ("#cheerupdialog").attr ("title", "You Win!");
+			            $ ("#cheerupdialog").attr ("title", "游戏结束");
 			            $ ("#cheerupdialog").text ("恭喜你获胜！");
 			            
 		            }
@@ -332,12 +332,15 @@ h4 {
 		                buttons : {
 			                "确认" : function () {
 				                resetGame ();
-				                var humanColor = "X";
-				                var computerColor = "O";
+				                humanColor = "X";
+				                computerColor = "O";
 				                $ (this).dialog ("close");
 				                showChooseColorDialog ();
 				                
 			                }
+		                },
+		                open : function (event, ui) {
+			                $ (".ui-dialog-titlebar-close", $ (this).parent ()).hide ();
 		                }
 		            });
 		            
