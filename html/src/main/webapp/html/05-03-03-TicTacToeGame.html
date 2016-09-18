@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Tic Tac Toe Game</title>
+<link rel="stylesheet" href="../../resources/bootstrap.min.css" />
+<link rel="stylesheet" href="../../resources/jquery-ui.css" />
+
+<!-- 
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+-->
+<style type="text/css">
+html, body {
+	height: 100%;
+	width: 100%;
+	background-color: #F1F1F1;
+}
+
+#gamepannel {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 30px;
+	width: 350px;
+	height: 260px;
+	border-radius: 15px;
+	background-color: #37A0DF;
+	width: 350px;
+}
+
+h4 {
+	margin-left: auto;
+	margin-right: auto;
+	font-family: 'Brush Script MT';
+	color: #FFFFFF;
+	font-size: 26px;
+	padding-top: 20px;
+	text-align: center;
+}
+
+.div_line {
+	display: flex;
+}
+
+.div_button {
+	display: inline;
+	margin: 0 auto;
+}
+
+.btn_point {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
+	background: #424959;
+	border-radius: 4px;
+	border-style: solid;
+	color: white;
+	width: 75px;
+	height: 50px;
+}
+</style>
+
+
+
+<script src="../../resources/jquery-latest.js"></script>
+<script src="../../resources/jquery-ui.min.js"></script>
+
+<!-- 
+<script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+ -->
+<script>
+	$ (document).ready (
+            function () {
+	            
+	            // X方优先
+	            var humanColor = "X";
+	            var computerColor = "O";
+	            
+	            var pointArr = [
+	                    "", "", "", "", "", "", "", "", ""
+	            ];
+	            
+	            var checkMatrix = [
+	                    [
+	                            0, 1, 2
+	                    ], [
+	                            3, 4, 5
+	                    ], [
+	                            6, 7, 8
+	                    ], [
+	                            0, 3, 6
+	                    ], [
+	                            1, 4, 7
+	                    ], [
+	                            2, 5, 8
+	                    ], [
+	                            0, 4, 8
+	                    ], [
+	                            2, 4, 6
+	                    ]
+	            ];
+	            showChooseColorDialog ();
+	            
+	            $ (".btn_point").on ("click", function (e) {
+		            
+		            var targetId = $ (e.currentTarget).attr ("id");
+		            var intId = parseInt (targetId.match (/\d$/i));
+		            
+		            if (pointArr[intId] !== ""){
+			            return;
+		            }
+		            
+		            $ (e.currentTarget).text (humanColor);
+		            pointArr[intId] = humanColor;
+		            
+		            //玩家落子后，确认是否结束
+		            var gameresult = checkResult ();
+		            processResult (gameresult);
+		            if (gameresult[0] != ""){
+			            return;
+		            }
+		            
+		            //计算机落子
+		            var computerPoint = computeSide ()
+		            $ ("#btnpoint" + computerPoint).text (computerColor);
+		            pointArr[computerPoint] = computerColor;
+		            
+		            //计算机落子后，确认是否结束
+		            gameresult = checkResult ()
+		            processResult (gameresult);
+		            
+	            });
+	            
+	            function computeSide () {
+		            
+		            //检测己方是否有直接获胜的点，如果有，在该点落子
+		            var setpoint = -1;
+		            for (var i = 0; i < checkMatrix.length; i++){
+			            var valueStr = "" + pointArr[checkMatrix[i][0]] + pointArr[checkMatrix[i][1]]
+			                    + pointArr[checkMatrix[i][2]];
+			            if (valueStr === (computerColor + computerColor)){
+				            setpoint = (pointArr[checkMatrix[i][0]] === "") ? checkMatrix[i][0]
+				                    : ((pointArr[checkMatrix[i][1]] === "") ? checkMatrix[i][1] : checkMatrix[i][2]);
+				            return setpoint;
+			            }
+		            }
+		            
+		            //检测对方所有落子点，确认是否有可能出现三个连线点，如果存在，优先在该点落子
+		            for (var i = 0; i < checkMatrix.length; i++){
+			            var valueStr = "" + pointArr[checkMatrix[i][0]] + pointArr[checkMatrix[i][1]]
+			                    + pointArr[checkMatrix[i][2]];
+			            if (valueStr === (humanColor + humanColor)){
+				            setpoint = (pointArr[checkMatrix[i][0]] === "") ? checkMatrix[i][0]
+				                    : ((pointArr[checkMatrix[i][1]] === "") ? checkMatrix[i][1] : checkMatrix[i][2]);
+				            return setpoint;
+			            }
+		            }
+		            
+		            //检测己方所有落子点，确认是否有可能出现两个以上的连线点，如果存在，优先在该点落子
+		            var comTwoWay = findTwoWayPoint (computerColor);
+		            if (comTwoWay >= 0){
+			            return comTwoWay;
+		            }
+		            
+		            //检测对方所有落子点，确认是否有可能出现两个以上的连线点，如果存在，优先在该点落子
+		            var humanTwoWay = findTwoWayPoint (humanColor);
+		            if (humanTwoWay >= 0){
+			            return humanTwoWay;
+		            }
+		            
+		            //选择在该点落子可能连成线的方向最多的点。
+		            var maxCount = 0;
+		            var maxPoint = -1;
+		            for (var i = 0; i < pointArr.length; i++){
+			            var count = 0;
+			            for (var j = 0; j < checkMatrix.length; j++){
+				            if (checkMatrix[j][0] != i && checkMatrix[j][1] != i && checkMatrix[j][2] != i){
+					            continue;
+				            }
+				            var valueStr = "" + pointArr[checkMatrix[j][0]] + pointArr[checkMatrix[j][1]]
+				                    + pointArr[checkMatrix[j][2]];
+				            
+				            if (valueStr === ""){
+					            count++;
+					            if (count > maxCount){
+						            maxCount = count;
+						            maxPoint = i;
+					            }
+				            }
+			            }
+		            }
+		            if (maxPoint >= 0){
+		            	return maxPoint;
+		            }
+		            
+		            //选择方向上点数最少的点落子
+		            for (var i = 0; i < checkMatrix.length; i++){
+			            var valueStr = "" + pointArr[checkMatrix[i][0]] + pointArr[checkMatrix[i][1]]
+			                    + pointArr[checkMatrix[i][2]];
+			            if (valueStr.length === 0){
+				            setpoint = checkMatrix[i][1];
+				            return setpoint;
+			            }
+			            else if (valueStr.length === 3){
+				            continue;
+			            }
+			            else{
+				            setpoint = (pointArr[checkMatrix[i][0]] === "") ? checkMatrix[i][0]
+				                    : ((pointArr[checkMatrix[i][1]] === "") ? checkMatrix[i][1] : checkMatrix[i][2]);
+				            return setpoint;
+				            
+			            }
+		            }
+		            
+	            }
+	            
+	            function findTwoWayPoint (side) {
+		            
+		            for (var i = 0; i < pointArr.length; i++){
+			            var temppointArr = [
+			                    "", "", "", "", "", "", "", "", ""
+			            ];
+			            for (var j = 0; j < pointArr.length; j++){
+				            temppointArr[j] = pointArr[j];
+			            }
+			            if (temppointArr[i] != ""){
+				            continue;
+			            }
+			            
+			            temppointArr[i] = side;
+			            var count = 0;
+			            
+			            for (var j = 0; j < checkMatrix.length; j++){
+				            var valueStr = "" + temppointArr[checkMatrix[j][0]] + temppointArr[checkMatrix[j][1]]
+				                    + temppointArr[checkMatrix[j][2]];
+				            
+				            if (valueStr === (side + side)){
+					            count++;
+					            if (count === 2){
+						            return i;
+					            }
+				            }
+			            }
+		            }
+		            return -1;
+	            }
+	            
+	            function checkResult () {
+		            var result = "";
+		            var haveEmptyPoint = false;
+		            var winIndex = -1;
+		            for (var i = 0; i < checkMatrix.length; i++){
+			            var valueStr = "" + pointArr[checkMatrix[i][0]] + pointArr[checkMatrix[i][1]]
+			                    + pointArr[checkMatrix[i][2]];
+			            if (valueStr.length < 3){
+				            haveEmptyPoint = true;
+			            }
+			            if (valueStr === (computerColor + computerColor + computerColor)){
+				            result = "computer";
+				            winIndex = i;
+				            break;
+			            }
+			            if (valueStr === (humanColor + humanColor + humanColor)){
+				            result = "human";
+				            winIndex = i;
+				            break;
+			            }
+		            }
+		            if (result === "" && !haveEmptyPoint){
+			            result = "equa";
+		            }
+		            
+		            return [
+		                    result, winIndex
+		            ];
+	            }
+	            
+	            function processResult (gameresult) {
+		            if (gameresult[0] !== ""){
+			            
+			            //如果所有格子填满，且没有连成线
+			            if (gameresult[0] === "equa"){
+				            var t = humanColor;
+				            humanColor = computerColor;
+				            computerColor = t;
+				            resetGame ();
+				            if (computerColor === "X"){
+					            computerPoint = computeSide ()
+					            $ ("#btnpoint" + computerPoint).text (computerColor);
+					            pointArr[computerPoint] = computerColor;
+				            }
+				            
+			            }
+			            //发现连成线了，提示连成线的棋子，并且返回胜利方名称。
+			            else if (gameresult[0] === "human" || gameresult[0] === "computer"){
+				            cheerUp (gameresult);
+			            }
+		            }
+	            }
+	            
+	            function resetGame () {
+		            for (var i = 0; i < pointArr.length; i++){
+			            pointArr[i] = "";
+			            $ ("#btnpoint" + i).text ("");
+			            $ ("#btnpoint" + i).css ("background", "#424959");
+		            }
+	            }
+	            
+	            function cheerUp (gameresult) {
+		            
+		            for (var i = 0; i < 3; i++){
+			            var tindex = checkMatrix[gameresult[1]][i];
+			            var tString = "#btnpoint" + tindex;
+			            $ (tString).css ("background", "#EF2313");
+		            }
+		            
+		            if (gameresult[0] === "computer"){
+			            $ ("#cheerupdialog").attr ("title", "You Lose!");
+			            $ ("#cheerupdialog").text ("你输了！");
+		            }
+		            else{
+			            $ ("#cheerupdialog").attr ("title", "You Win!");
+			            $ ("#cheerupdialog").text ("恭喜你获胜！");
+			            
+		            }
+		            
+		            $ ("#cheerupdialog").dialog ({
+		                closeOnEscape : false,
+		                height : 140,
+		                resizable : false,
+		                draggable : false,
+		                modal : true,
+		                buttons : {
+			                "确认" : function () {
+				                resetGame ();
+				                var humanColor = "X";
+				                var computerColor = "O";
+				                $ (this).dialog ("close");
+				                showChooseColorDialog ();
+				                
+			                }
+		                }
+		            });
+		            
+	            }
+	            
+	            function showChooseColorDialog () {
+		            $ ("#chooseColorDialog").dialog ({
+		                closeOnEscape : false,
+		                height : 180,
+		                resizable : false,
+		                draggable : false,
+		                
+		                modal : true,
+		                
+		                position : {
+			                using : function (pos) {
+				                var topOffset = $ (this).css (pos).offset ().top;
+				                if (topOffset = 0 || topOffset > 0){
+					                $ (this).css ('top', 90);
+				                }
+			                }
+		                },
+		                
+		                buttons : {
+		                    "X" : function () {
+			                    $ (this).dialog ("close");
+		                    },
+		                    "O" : function () {
+			                    $ (this).dialog ("close");
+			                    //计算机优先
+			                    humanColor = "O";
+			                    computerColor = "X";
+			                    var computerPoint = computeSide ()
+			                    $ ("#btnpoint" + computerPoint).text (computerColor);
+			                    pointArr[computerPoint] = computerColor;
+			                    
+		                    }
+		                },
+		                open : function (event, ui) {
+			                $ (".ui-dialog-titlebar-close", $ (this).parent ()).hide ();
+		                }
+		            
+		            });
+	            }
+            });
+</script>
+</head>
+<body>
+    <div id="gamepannel">
+        <h4>CNMOON's Tic Tac Toe Game</h4>
+        <div class="div_line">
+            <div class="div_button">
+                <button class="btn_point" id="btnpoint0"></button>
+            </div>
+            <div class="div_button">
+                <button class="btn_point" id="btnpoint1"></button>
+            </div>
+            <div class="div_button">
+                <button class="btn_point" id="btnpoint2"></button>
+            </div>
+        </div>
+
+        <div class="div_line">
+            <div class="div_button">
+                <button class="btn_point" id="btnpoint3"></button>
+            </div>
+            <div class="div_button">
+                <button class="btn_point" id="btnpoint4"></button>
+            </div>
+            <div class="div_button">
+                <button class="btn_point" id="btnpoint5"></button>
+            </div>
+        </div>
+
+        <div class="div_line">
+            <div class="div_button">
+                <button class="btn_point" id="btnpoint6"></button>
+            </div>
+            <div class="div_button">
+                <button class="btn_point" id="btnpoint7"></button>
+            </div>
+            <div class="div_button">
+                <button class="btn_point" id="btnpoint8"></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="cheerupdialog"></div>
+    <div id="chooseColorDialog">
+        <p>请选择：X或者O，X方优先。默认选择X。</p>
+    </div>
+</body>
+</html>
