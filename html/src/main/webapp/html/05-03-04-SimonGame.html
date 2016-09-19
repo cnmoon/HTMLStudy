@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Simon Game</title>
+<link rel="stylesheet" href="../../resources/bootstrap.min.css" />
+<link rel="stylesheet" href="../../resources/jquery-ui.css" />
+
+<style>
+html, body {
+	height: 100%;
+	width: 100%;
+	background-color: #F1F1F1;
+}
+
+#gamepannel {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	width: 350px;
+	height: 220px;
+	border-radius: 15px;
+	background-color: #37A0DF;
+}
+
+h4 {
+	margin-left: auto;
+	margin-right: auto;
+	font-family: 'Brush Script MT';
+	color: #FFFFFF;
+	font-size: 26px;
+	padding-top: 20px;
+}
+
+.div_line {
+	display: flex;
+}
+
+.div_line2 {
+	margin-top: 20px;
+}
+
+.div_button {
+	display: inline;
+	margin: 0 auto;
+}
+
+.btn_music {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
+	background: #424959;
+	border-radius: 4px;
+	border-style: solid;
+	color: white;
+	width: 75px;
+	height: 50px;
+}
+
+#btnmusic1 {
+	background: rgb(159, 15, 23);
+}
+
+#btnmusic2 {
+	background: rgb(9, 74, 143);
+}
+
+#btnmusic3 {
+	background: rgb(204, 167, 7);
+}
+
+#btnmusic4 {
+	background: rgb(0, 167, 74);
+}
+
+#countinput {
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 5px;
+	padding-right: 5px;
+	padding-left: 5px;
+	border: none;
+	font-size: 25px;
+	color: #FFFFFF;
+	background: rgb(50, 5, 12);
+	width: 50px;
+	height: 40px;
+	text-align: center;
+	border-radius: 4px;
+}
+
+.btn {
+	margin-top: 20px;
+}
+
+#btnswitch {
+	color: white;
+	background: rgb(159, 15, 23);
+}
+</style>
+<script src="../../resources/jquery-latest.js"></script>
+<script src="../../resources/jquery-ui.min.js"></script>
+
+<script>
+	$ (document).ready (function () {
+	    var isStrict = false;
+	    var isOn = false;
+	    
+	    var gamelength = 6;
+	    
+	    var audContext;
+	    window.AudioContext = (window.AudioContext || window.webkitAudioContext);
+	    
+	    if (window.AudioContext){
+		    audContext = new window.AudioContext ();
+	    }
+	    else{
+		    return;
+	    }
+	    
+	    var freq = [
+	            200, 230, 270, 300
+	    ];
+	    
+	    var badFreq = 3500;
+	    
+	    var currentOsc;
+	    var currentGain;
+	    var seq = [];
+	    
+	    var beforeOffMusicBtnStatus = false;
+	    $ ("#btnswitch").on ("click", function (e) {
+		    if (!isOn){
+			    isOn = true;
+			    $ ("#btnswitch").css ("background", "rgb(0, 167, 74)");
+			    
+			    if (beforeOffMusicBtnStatus){
+				    $ (".btn_music").removeAttr ("disabled");
+			    }
+			    else{
+				    $ (".btn_music").attr ("disabled", "disabled");
+			    }
+			    
+			    $ ("#btnstart").removeAttr ("disabled");
+			    $ ("#btnstrict").removeAttr ("disabled");
+		    }
+		    else{
+			    isOn = false;
+			    $ ("#btnswitch").css ("background", "rgb(159, 15, 23)");
+			    
+			    var t = $ (".btn_music").attr ("disabled");
+			    if (t === "disabled"){
+				    beforeOffMusicBtnStatus = false;
+			    }
+			    else{
+				    beforeOffMusicBtnStatus = true;
+			    }
+			    $ (".btn_music").attr ("disabled", "disabled");
+			    $ ("#btnstart").attr ("disabled", "disabled");
+			    $ ("#btnstrict").attr ("disabled", "disabled");
+			    
+		    }
+		    
+	    });
+	    
+	    $ ("#btnstrict").on ("click", function (e) {
+		    if (!isOn){
+			    return;
+		    }
+		    if (!isStrict){
+			    isStrict = true;
+			    $ ("#btnstrict").css ("background", "rgb(159, 15, 23)");
+			    $ ("#btnstrict").css ("color", "white");
+		    }
+		    else{
+			    isStrict = false;
+			    $ ("#btnstrict").css ("background", "rgb(192, 192, 192)");
+			    $ ("#btnstrict").css ("color", "black");
+		    }
+	    });
+	    
+	    $ ("#btnstart").on ("click", function (e) {
+		    if (!isOn){
+			    return;
+		    }
+		    
+		    if (playtimer){
+			    window.clearInterval (playtimer);
+			    changeButtonColor (-1);
+			    playseqindex = 0;
+		    }
+		    seq = [];
+		    nextloop ();
+	    });
+	    
+	    function nextloop () {
+		    $ (".btn_music").attr ("disabled", "disabled");
+		    
+		    var f = Math.floor (Math.random () * 4) + 1;
+		    seq.push (f);
+		    if (seq.length < 10){
+			    $ ("#countinput").val ("0" + seq.length);
+		    }
+		    else{
+			    $ ("#countinput").val (seq.length);
+		    }
+		    playTone ();
+	    }
+	    
+	    var orgColor = [
+	            "rgb(159, 15, 23)", "rgb(9, 74, 143)", "rgb(204, 167, 7)", "rgb(0, 167, 74)"
+	    ];
+	    var playColor = [
+	            "rgb(255, 76, 76)", "rgb(28, 140, 255)", "rgb(254, 217, 63)", "rgb(19, 255, 124)"
+	    ];
+	    
+	    function changeButtonColor (index) {
+		    for (var i = 1; i <= 4; i++){
+			    if (i === index){
+				    $ ("#btnmusic" + i).css ("background", playColor[i - 1]);
+			    }
+			    else{
+				    $ ("#btnmusic" + i).css ("background", orgColor[i - 1]);
+			    }
+		    }
+	    }
+	    
+	    var playseqindex = 0;
+	    var playtimer;
+	    function playTone () {
+		    
+		    playtimer = window.setInterval (function () {
+			    if (currentOsc != null){
+				    currentOsc.stop (0);
+				    currentOsc = null;
+				    currentGain = null;
+			    }
+			    if (playseqindex === seq.length){
+				    window.clearInterval (playtimer);
+				    changeButtonColor (-1);
+				    playseqindex = 0;
+				    $ (".btn_music").removeAttr ("disabled");
+				    return;
+			    }
+			    
+			    changeButtonColor (seq[playseqindex]);
+			    
+			    var o = audContext.createOscillator ();
+			    var g = audContext.createGain ();
+			    o.frequency.value = freq[seq[playseqindex] - 1];
+			    
+			    o.type = "sine";
+			    
+			    g.gain.value = 1; //音量
+			    
+			    currentGain = g;
+			    currentOsc = o;
+			    currentOsc.connect (currentGain);
+			    currentOsc.connect (audContext.destination);
+			    currentOsc.start (0.0);
+			    currentOsc.stop (audContext.currentTime + 0.5);
+			    currentOsc.onended = function () {
+				    changeButtonColor (-1);
+			    };
+			    
+			    playseqindex++;
+		    }, 800);
+		    
+	    }
+	    
+	    $ (".btn_music").on ("mousedown", function (e) {
+		    if (currentOsc != null){
+			    currentOsc.stop (0);
+			    currentOsc = null;
+			    currentGain = null;
+		    }
+		    
+		    var targetId = $ (e.currentTarget).attr ("id");
+		    var intId = parseInt (targetId.match (/\d$/i));
+		    
+		    changeButtonColor (intId);
+		    
+		    var o = audContext.createOscillator ();
+		    var g = audContext.createGain ();
+		    o.frequency.value = freq[intId - 1];
+		    o.type = "sine";
+		    
+		    g.gain.value = 1; //音量
+		    
+		    currentGain = g;
+		    currentOsc = o;
+		    
+		    currentOsc.connect (currentGain);
+		    currentOsc.connect (audContext.destination)
+
+		    currentOsc.start (0.0);
+		    
+	    });
+	    
+	    $ (".btn_music").on ("mouseup", function (e) {
+		    
+		    if (currentOsc != null){
+			    currentOsc.stop (0);
+			    currentOsc = null;
+			    currentGain = null;
+		    }
+		    
+		    changeButtonColor (-1);
+	    });
+	    
+	    var inputSeq = [];
+	    
+	    var errorShowTimer;
+	    $ (".btn_music").on ("click", function (e) {
+		    var targetId = $ (e.currentTarget).attr ("id");
+		    var intId = parseInt (targetId.match (/\d$/i));
+		    inputSeq.push (intId);
+		    
+		    var compareResult = true;
+		    for (var i = 0; i < inputSeq.length; i++){
+			    if (seq[i] != inputSeq[i]){
+				    compareResult = false;
+				    break;
+			    }
+		    }
+		    
+		    if (compareResult && seq.length === inputSeq.length){
+			    
+			    if (seq.length === gamelength){
+				    //把相关变量清零
+				    inputSeq = [];
+				    
+				    //胜利结束
+				    $ (".btn_music").attr ("disabled", "disabled");
+				    cheerUp ("win");
+			    }
+			    else{
+				    //增加一个音符，继续
+				    inputSeq = [];
+				    nextloop ();
+			    }
+			    return;
+		    }
+		    
+		    if (!compareResult){
+			    
+			    inputSeq = [];
+			    $ ("#countinput").val ("!!");
+			    
+			    if (currentOsc != null){
+				    currentOsc.stop (0);
+				    currentOsc = null;
+				    currentGain = null;
+			    }
+			    
+			    var o = audContext.createOscillator ();
+			    var g = audContext.createGain ();
+			    o.frequency.value = badFreq;
+			    o.type = "sine";
+			    g.gain.value = 1; //音量
+			    currentGain = g;
+			    currentOsc = o;
+			    currentOsc.connect (currentGain);
+			    currentOsc.connect (audContext.destination)
+			    currentOsc.start (0.0);
+			    
+			    errorShowTimer = window.setInterval (function () {
+				    if (seq.length < 10){
+					    $ ("#countinput").val ("0" + seq.length);
+				    }
+				    else{
+					    $ ("#countinput").val (seq.length);
+				    }
+				    
+				    if (currentOsc != null){
+					    currentOsc.stop (0);
+					    currentOsc = null;
+					    currentGain = null;
+				    }
+				    
+				    window.clearInterval (errorShowTimer);
+			    }, 500);
+			    $ (".btn_music").attr ("disabled", "disabled");
+			    
+			    //如果restrict，游戏结束
+			    if (isStrict){
+				    cheerUp ("lose");
+				    return;
+			    }
+			    //如果不是restrict，重新播放
+			    playTone ();
+			    
+		    }
+		    
+	    });
+	    
+	    function cheerUp (gameresult) {
+		    if (gameresult === "lose"){
+			    $ ("#cheerupdialog").attr ("title", "游戏结束");
+			    $ ("#cheerupdialog").text ("你输了！");
+		    }
+		    else{
+			    $ ("#cheerupdialog").attr ("title", "游戏结束");
+			    $ ("#cheerupdialog").text ("恭喜你获胜！");
+			    
+		    }
+		    
+		    $ ("#cheerupdialog").dialog ({
+		        closeOnEscape : false,
+		        height : 140,
+		        resizable : false,
+		        draggable : false,
+		        modal : true,
+		        buttons : {
+			        "确认" : function () {
+				        $ (this).dialog ("close");
+			        }
+		        },
+		        open : function (event, ui) {
+			        $ (".ui-dialog-titlebar-close", $ (this).parent ()).hide ();
+		        }
+		    });
+	    } //function cheerUP
+	    
+    });
+</script>
+
+</head>
+<body>
+    <div id="gamepannel">
+        <h4>CNMOON's Simon Game</h4>
+
+        <div class="div_line">
+            <div class="div_button">
+                <button class="btn_music" id="btnmusic1" disabled></button>
+            </div>
+            <div class="div_button">
+                <button class="btn_music" id="btnmusic2" disabled></button>
+            </div>
+            <div class="div_button">
+                <button class="btn_music" id="btnmusic3" disabled></button>
+            </div>
+            <div class="div_button">
+                <button class="btn_music" id="btnmusic4" disabled></button>
+            </div>
+        </div>
+
+
+        <div class="div_line div_line2">
+            <div class="div_button">
+                COUNT<br> <input id="countinput" value="00" readonly>
+            </div>
+            <div class="div_button">
+                <button class="btn" id="btnstart" disabled>START</button>
+            </div>
+            <div class="div_button">
+                <button class="btn" id="btnstrict" disabled>STRICT</button>
+            </div>
+            <div class="div_button">
+                <button class="btn" id="btnswitch">ON/OFF</button>
+            </div>
+        </div>
+    </div>
+    <div id="cheerupdialog"></div>
+</body>
+</html>
