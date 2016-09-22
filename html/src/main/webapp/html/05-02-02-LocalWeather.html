@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Local Weather</title>
+<link rel="stylesheet" href="../../resources/bootstrap.min.css" />
+
+<!-- 天气动画脚本来自http://www.w3cfuns.com/notes/19431/7399933a8c4e23af34c765e48e987303.html，版权归原作者所有 -->
+<!-- 所有天气背景图来自pic.weather.com.cn，版权归该网站所有 -->
+<link rel="stylesheet" href="../../resources/weather.css" />
+<style>
+body {
+	background-image:
+		url(http://pic.weather.com.cn/images/cn/photo/2014/05/08/DACEB57C454DB4AC5A71CE0EB887F7C0.jpg);
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	overflow: hidden;
+}
+
+.frosted-glass {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 180px;
+	text-align: center;
+	width: 470px;
+	height: 330px;
+	border-radius: 15px;
+	border: 1px solid white;
+	background: inherit;
+	-webkit-filter: blur(5px);
+	-moz-filter: blur(5px);
+	-ms-filter: blur(5px);
+	-o-filter: blur(5px);
+	filter: blur(5px);
+	filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius=4, MakeShadow=false);
+}
+
+#pannel {
+	position: relative;
+	display: block;
+	width: 450px;
+	height: 380px;
+	margin-top: -345px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+h4 {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 20px;
+	font-family: 'Brush Script MT';
+	color: #FAFAFA;
+	font-size: 26px;
+	padding-top: 30px;
+	text-align: center;
+	opacity: 0.95;
+	font-family: 'Brush Script MT';
+}
+
+.div_line {
+	display: flex;
+	margin-top: 30px;
+}
+
+.div_content {
+	display: inline;
+	margin: 0 auto;
+	color: white;
+}
+
+#cond_img {
+	margin-left: 100px;
+	width: 60px;
+	height: 60px;
+}
+
+#switch {
+	margin-top: -5px;
+}
+
+b {
+	font-size: 18px;
+}
+
+#icon_div {
+	margin-left: 30px;
+	align: center;
+	width: 280px;
+}
+
+#cond {
+	margin-right: 30px;
+	padding-top: 40px;
+	width: 180px;
+    height: 80px;
+    align: center;
+	font-size: 300%;
+}
+</style>
+
+<script src="../../resources/jquery-latest.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> -->
+
+
+<!-- 代码使用了baidu api市场中的http://www.heweather.com/提供的api获取天气信息 -->
+<!-- 天气api参考本网址：http://apistore.baidu.com/apiworks/servicedetail/478.html -->
+<!-- 使用了chaxun.1616.net提供的API获取本机IP地址 -->
+<script>
+	$ (document)
+            .ready (
+                    function () {
+	                    
+	                    var getipurl = 'http://chaxun.1616.net/s.php?type=ip&output=json&callback=?&_='
+	                            + Math.random ();
+	                    $
+	                            .getJSON (
+	                                    getipurl,
+	                                    function (data) {
+		                                    var cityip = data.Ip;
+		                                    //var cityip = "202.101.224.68";
+		                                    //var cityip = "219.137.148.2";
+		                                    var url = "http://apis.baidu.com/heweather/weather/free";
+		                                    url += "?cityip=" + cityip;
+		                                    var apikey = "f0b8f9a99ecfd2cd899b40417bbaa937";
+		                                    
+		                                    var pic = [
+		                                            [
+		                                                    "snowy",
+		                                                    "http://pic.weather.com.cn/images/cn/photo/2015/05/06/C993D389A2C691824C9DBB9B45148F3E.jpg"
+		                                            ],
+		                                            [
+		                                                    "sunny",
+		                                                    "http://pic.weather.com.cn/images/cn/photo/2015/05/06/94D91145E66FC47A97F35769C9084C0C.jpg"
+		                                            ],
+		                                            [
+		                                                    "rainy",
+		                                                    "http://pic.weather.com.cn/images/cn/photo/2014/05/08/5C6E4566F293B3A6D2B248F4A560547A.jpg"
+		                                            ],
+		                                            [
+		                                                    "cloudy",
+		                                                    "http://pic.weather.com.cn/images/cn/photo/2014/05/08/8B731D36B8895A15BF3465DCFCE5255F.jpg"
+		                                            ],
+		                                            [
+		                                                    "other",
+		                                                    "http://pic.weather.com.cn/images/cn/photo/2014/05/08/DACEB57C454DB4AC5A71CE0EB887F7C0.jpg"
+		                                            ]
+		                                    ];
+		                                    
+		                                    var icon_html = [
+		                                            '<div class="icon sun-shower"><div class="cloud"></div><div class="sun"><div class="rays"></div></div><div class="rain"></div></div>',
+		                                            '<div class="icon thunder-storm"><div class="cloud"></div><div class="lightning"><div class="bolt"></div><div class="bolt"></div></div></div>',
+		                                            '<div class="icon cloudy"><div class="cloud"></div><div class="cloud"></div></div>',
+		                                            '<div class="icon flurries"><div class="cloud"></div><div class="snow"><div class="flake"></div><div class="flake"></div></div></div>',
+		                                            '<div class="icon sunny"><div class="sun"><div class="rays"></div></div></div>',
+		                                            '<div class="icon rainy"><div class="cloud"></div><div class="rain"></div></div>'
+		                                    ];
+		                                    $.ajax ({
+		                                        url : url,
+		                                        headers : {
+			                                        "apikey" : apikey
+		                                        },
+		                                        success : function (data) {
+			                                        console.log (data);
+			                                        
+			                                        var mainObject = data["HeWeather data service 3.0"][0];
+			                                        
+			                                        var city = mainObject["basic"]["city"];
+			                                        if (mainObject["aqi"] && mainObject["aqi"]["city"]){
+				                                        var aqi = mainObject["aqi"]["city"]["aqi"];
+			                                        }
+			                                        else{
+				                                        aqi = "Unknown";
+			                                        }
+			                                        
+			                                        var tmp_c = mainObject["now"]["tmp"];
+			                                        var cond = mainObject["now"]["cond"]["txt"];
+			                                        var condcode = mainObject["now"]["cond"]["code"];
+			                                        
+			                                        //$ ("#cond_img").attr ("src", "http://files.heweather.com/cond_icon/" + condcode + ".png");
+			                                        
+			                                        $ ("#city").text (city);
+			                                        $ ("#cond").text (cond);
+			                                        $ ("#aqi").text (aqi);
+			                                        $ ("#tempvalue").text (tmp_c);
+			                                        
+			                                        condcode = parseInt (condcode);
+			                                        
+			                                        if (condcode >= 300 && condcode < 400){
+				                                        //雨
+				                                        $ ("body").css ("background-image", "url(" + pic[2][1] + ")");
+				                                        if (condcode === 302 || condcode === 303 || condcode === 304){ //雷阵雨
+					                                        $ ("#icon_div").html (icon_html[1]);
+				                                        }
+				                                        else if (condcode == 300 || condcode === 301){ //阵雨
+					                                        $ ("#icon_div").html (icon_html[0]);
+				                                        }
+				                                        else{
+					                                        $ ("#icon_div").html (icon_html[5]);
+				                                        }
+			                                        }
+			                                        else if (condcode >= 400 && condcode < 500){
+				                                        //雪
+				                                        $ ("body").css ("background-image", "url(" + pic[0][1] + ")");
+				                                        $ ("#icon_div").html (icon_html[3]);
+				                                        
+			                                        }
+			                                        else if (condcode >= 101 && condcode < 200){
+				                                        //阴
+				                                        $ ("body").css ("background-image", "url(" + pic[3][1] + ")");
+				                                        $ ("#icon_div").html (icon_html[2]);
+				                                        
+			                                        }
+			                                        else if (condcode === 100){
+				                                        //晴
+				                                        $ ("body").css ("background-image", "url(" + pic[1][1] + ")");
+				                                        $ ("#icon_div").html (icon_html[4]);
+				                                        
+			                                        }
+			                                        else{
+				                                        $ ("body").css ("background-image", "url(" + pic[4][1] + ")");
+				                                        $ ("#icon_div").html (icon_html[4]);
+				                                        
+			                                        }
+		                                        } // success
+		                                    }); //ajax
+	                                    });
+	                    
+	                    var tempMeasure = "c";
+	                    $ ("#switch").on ("click", function (e) {
+		                    var temp = parseInt ($ ("#tempvalue").text ());
+		                    if (tempMeasure === "c"){
+			                    $ ("#temp").text ("温度（F）：");
+			                    tempMeasure = "f";
+			                    $ ("#tempvalue").text (Math.round (temp * 1.8 + 32));
+		                    }
+		                    else{
+			                    $ ("#temp").text ("温度（C）：");
+			                    tempMeasure = "c";
+			                    $ ("#tempvalue").text (Math.round ((temp - 32) / 1.8));
+		                    }
+	                    });
+                    });
+</script>
+</head>
+<body>
+
+    <div class="frosted-glass"></div>
+
+    <div id="pannel">
+        <h4>CNMOON's Local Weather Page</h4>
+        <div class="div_line">
+            <div id="icon_div" class="div_content">
+                <!-- <img id="cond_img" src=""></img>  -->
+            </div>
+            <div id="cond" class="div_content"></div>
+        </div>
+
+        <div class="div_line">
+            <div class="div_content">
+                <b>城市：</b><b id="city"></b>
+            </div>
+            <div class="div_content">
+                <b>AQI：</b><b id="aqi"></b>
+            </div>
+            <div class="div_content">
+                <b id="temp">温度（C）：</b><b id="tempvalue"></b>
+            </div>
+            <div class="div_content">
+                <button class="btn btn-info" id="switch">C/F</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

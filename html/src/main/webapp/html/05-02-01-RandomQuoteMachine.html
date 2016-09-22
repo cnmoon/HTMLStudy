@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Random Quote Machine</title>
+<link rel="stylesheet" href="../../resources/bootstrap.min.css" />
+<link rel="stylesheet"
+    href="http://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+<style>
+#quotepannel {
+	margin-left: auto;
+	margin-right: auto;
+	padding: 15px;
+	text-align: center;
+	width: 400px;
+	height: auto;
+	border-radius: 15px;
+	background-color: #37A0DF;
+	text-align: center;
+}
+
+h4 {
+	margin-left: auto;
+	margin-right: auto;
+	font-family: 'Brush Script MT';
+	color: #FFFFFF;
+	font-size: 26px;
+}
+
+button {
+	margin-right: auto;
+}
+
+a {
+	margin-right: 220px;
+}
+
+#quotetext {
+	color: #dedede;
+}
+</style>
+<script src="../../resources/jquery-latest.js"></script>
+<script>
+	$ (document).ready (
+            function () {
+	            var quotes = [
+	                    "生活是一面镜子。你对它笑，它就对你笑；你对它哭，它也对你哭。", "活着一天，就是有福气，就该珍惜。当我哭泣我没有鞋子穿的时候，我发现有人却没有脚。",
+	                    "人生是个圆，有的人走了一辈子也没有走出命运画出的圆圈，其实，圆上的每一个点都有一条腾飞的切线。", "千万别迷恋网络游戏，要玩就玩好人生这场大游戏。",
+	                    "命运负责洗牌，但是玩牌的是我们自己！", "我们心中的恐惧，永远比真正的危险巨大的多。", "命运掌握在自己手中。要么你驾驭生命，要么生命驾驭你，你的心态决定你是坐骑还是骑手。"
+	            ];
+	            
+	            $ ("#quotetext").text (quotes[0]);
+	            
+	            $ ("#lnk_twitter").attr ("href", "https://twitter.com/intent/tweet?text=" + quotes[0]);
+	            
+	            var currentIndex = 0;
+	            
+	            $ ("#btn_next").on ("click", function (e) {
+		            if (currentIndex === quotes.length - 1){
+			            currentIndex = 0;
+		            }
+		            else{
+			            currentIndex++;
+		            }
+		            $ ("#quotetext").text (quotes[currentIndex]);
+		            
+		            $ ("#lnk_twitter").attr ("href", "https://twitter.com/intent/tweet?text=" + quotes[currentIndex]);
+		            
+	            });
+	            
+            });
+</script>
+
+</head>
+<body>
+    <div id="quotepannel">
+        <h4>CNMOON's Random Quote Machine</h4>
+        <blockquote class="text-info text-left" id="quotetext"></blockquote>
+
+        <a id="lnk_twitter" target="_blank" href="#" class="btn btn-info"> <i
+            class="fa fa-twitter"></i>
+        </a>
+        <button id="btn_next" class="btn btn-info">Next</button>
+    </div>
+</body>
+</html>
