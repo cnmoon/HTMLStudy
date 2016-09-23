@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Wikipedia Viewer</title>
+<link rel="stylesheet" href="../../resources/bootstrap.min.css" />
+<link rel="stylesheet" href="../../resources/jquery-ui.css" />
+<style>
+body {
+	background-color: rgb(9, 43, 64);
+}
+
+#searchpannel {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	width: 600px;
+	height: 850px;
+	border-radius: 15px;
+}
+
+input {
+	width: 500px;
+	border-radius: 2px;
+	padding: 5px;
+	border: 0px;
+	height: 35px;
+	font-size: 18px;
+	padding: 5px;
+}
+
+.div_line {
+	display: flex;
+}
+
+.div_content {
+	display: inline;
+	margin: 0 auto;
+}
+
+h4 {
+	margin-left: auto;
+	margin-right: auto;
+	font-family: 'Brush Script MT';
+	color: #FFFFFF;
+	font-size: 26px;
+	padding-top: 20px;
+}
+
+.resultlist {
+	cursor: pointer;
+	border: 1px solid #444444;
+	border-radius: 6px;
+	background-color: #dddddd;
+	margin-top: 12px;
+	padding: 6px;
+}
+
+.titletext {
+	text-align: left;
+	color: black;
+	font-size: 20px;
+}
+
+.extracttext {
+	text-align: left;
+	margin-top: 5px;
+	font-size: 12px;
+	color: black;
+}
+</style>
+
+<script src="../../resources/jquery-latest.js"></script>
+<!-- <script src="../../resources/jquery-ui.min.js"></script> -->
+<script type="text/javascript" src="../../resources/jquery-ui.js"></script>
+<!-- <script type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script> -->
+<script>
+	//参考资料：https://www.mediawiki.org/wiki/API:Main_page
+    $ (document)
+            .ready (
+                    function () {
+	                    
+	                    $ ("#ipt_search")
+	                            .keypress (
+	                                    function (e) {
+		                                    var key = e.which;
+		                                    if (key === 13){
+			                                    //参考资料：https://en.wikipedia.org/w/api.php?action=help&modules=query
+			                                    //参考资料：https://en.wikipedia.org/wiki/Special:ApiSandbox#action=query&format=json&prop=extracts&generator=search&exsentences=1&exlimit=10&exintro=1&explaintext=1&gsrlimit=10&gsrsearch=London
+			                                    var url = "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&generator=search&exsentences=1&exlimit=10&exintro=1&explaintext=1&gsrlimit=10&gsrsearch=";
+			                                    var data = $ ("#ipt_search").val ();
+			                                    
+			                                    $
+			                                            .ajax ({
+			                                                url : url + data,
+			                                                dataType : "jsonp",
+			                                                type : "get",
+			                                                headers : {
+				                                                "Api-User-Agent" : "Study/1.0 (http://codepen.io/cnmoon/; cnmoon@qq.com)"
+			                                                },
+			                                                success : function (data) {
+				                                                var html = "";
+				                                                if (data && data["query"] && data["query"]["pages"]){
+					                                                var keys = Object.keys (data["query"]["pages"]);
+					                                                keys
+					                                                        .forEach (function (key) {
+						                                                        html += "<div class = 'resultlist' onClick = \"window.open('https://en.wikipedia.org/?curid="
+						                                                                + key
+						                                                                + "', '_blank');\">"
+						                                                                + "<div class = 'titletext'>"
+						                                                                + data["query"]["pages"][key].title
+						                                                                + "</div>"
+						                                                                + "<div class = 'extracttext'>"
+						                                                                + data["query"]["pages"][key].extract
+						                                                                + "</div></div>";
+					                                                        });
+					                                                
+				                                                }
+				                                                $ ("#searchresult").html (html);
+			                                                }
+			                                            });
+			                                    
+		                                    }
+		                                    
+	                                    });
+	                    
+	                    //参考资料：http://api.jqueryui.com/autocomplete/
+	                    //参考资料：http://m.blog.csdn.net/article/details?id=46818195
+	                    //参考资料：https://en.wikipedia.org/w/api.php?action=help&modules=query%2Bprefixsearch
+	                    $ ("#ipt_search")
+	                            .autocomplete (
+	                                    {
+	                                        source : function (request, response) {
+		                                        
+		                                        var urlauto = "https://en.wikipedia.org/w/api.php?action=query&format=json&list=prefixsearch&pssearch=";
+		                                        $
+		                                                .ajax ({
+		                                                    url : urlauto + request["term"],
+		                                                    dataType : "jsonp",
+		                                                    type : "get",
+		                                                    headers : {
+			                                                    "Api-User-Agent" : "Study/1.0 (http://codepen.io/cnmoon/; cnmoon@qq.com)"
+		                                                    },
+		                                                    success : function (data) {
+			                                                    if (data && data["query"]
+			                                                            && data["query"]["prefixsearch"]){
+				                                                    response ($.map (data["query"]["prefixsearch"],
+				                                                            function (item) {
+					                                                            return item.title;
+				                                                            }));
+			                                                    }
+		                                                    }
+		                                                });
+	                                        },
+	                                        delay : 500
+	                                    });
+	                    
+                    });
+</script>
+</head>
+
+
+<body>
+    <div id="searchpannel">
+        <h4>CNMOON's Wikipedia Viewer</h4>
+        <br>
+        <div class="div_line">
+            <div class="div_content">
+                <input class="text" type="text" id="ipt_search" placeholder="Search Wiki" value="">
+            </div>
+            <div class="div_content">
+                <a target="_blank" class="btn btn-info"
+                    href="http://en.wikipedia.org/wiki/Special:Random">RANDOM</a>
+            </div>
+        </div>
+        <div id="searchresult"></div>
+    </div>
+
+</body>
+</html>
