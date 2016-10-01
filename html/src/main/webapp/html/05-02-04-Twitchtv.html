@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Twitchtv</title>
+<link rel="stylesheet" href="../../resources/bootstrap.css" />
+<link rel="stylesheet" href="../../resources/jquery-ui.css" />
+<style>
+#tvpannel {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	width: 400px;
+	height: 600px;
+	border-radius: 15px;
+	background-color: rgb(9, 43, 64);
+}
+
+h4 {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 20px;
+	font-family: 'Brush Script MT';
+	color: #FAFAFA;
+	font-size: 26px;
+	padding-top: 30px;
+	text-align: center;
+	opacity: 0.95;
+	font-family: 'Brush Script MT';
+}
+
+.div_line {
+	display: flex;
+	margin: 10px;
+}
+
+.div_content {
+	display: inline;
+	color: white;
+}
+
+.css_usrinfo {
+	height: 50px;
+	background-color: rgb(29, 63, 94);
+}
+
+.css_status {
+	align: right;
+	margin: 3px;
+	width: 90px;
+}
+
+.css_image {
+	margin-top: 5px;
+	margin-left: 5px;
+	width: 40px;
+}
+
+.css_middle {
+	width: 250px;
+	text-align: left;
+	margin-left: 15px;
+	margin-top: 5px;
+}
+
+#ipt_search {
+	width: 295px;
+	margin-right: 10px;
+	color: black;
+}
+</style>
+
+
+
+<script src="../../resources/jquery-latest.js"></script>
+<script type="text/javascript" src="../../resources/jquery-ui.js"></script>
+
+<script type="text/javascript" src="../../resources/bootstrap.js"></script>
+<script>
+	var usridlist = [
+            "freecodecamp", "admiralbulldog", "Amaz", "avngd", "rush", "thomasballinger", "closeaccount_test",
+            "beohoff"
+    ];
+    
+    var showfilter = "all"; //all, online, offline
+    var keystr = "";
+    
+    $ (document).ready (function () {
+	    
+	    $ (".li_button").on ("click", function (e) {
+		    var value = $ (e.currentTarget).text ();
+		    $ ("#span_title").text (value);
+		    if (value === "全部"){
+			    showfilter = "all";
+		    }
+		    else if (value === "离线"){
+			    showfilter = "offline";
+		    }
+		    else if (value === "在线"){
+			    showfilter = "online";
+		    }
+		    var newUsrList = getFilterUserList ();
+		    hidediv (newUsrList);
+	    });
+	    
+	    $ ("#ipt_search").on ("keyup", function (e) {
+		    
+		    keystr = $ ("#ipt_search").val ().toLowerCase ();
+		    var newUsrList = getFilterUserList ();
+		    hidediv (newUsrList);
+	    });
+	    
+	    intialList ();
+	    refeshUsrInfo ();
+    });
+    
+    function hidediv (showlist) {
+	    for (var i = 0; i < usridlist.length; i++){
+		    if (showlist.indexOf (usridlist[i]) >= 0){
+			    $ ("#div_" + usridlist[i]).css ("display", "");
+		    }
+		    else{
+			    $ ("#div_" + usridlist[i]).css ("display", "none");
+		    }
+	    }
+    }
+
+    function getFilterUserList () {
+	    var newUsrList = [];
+	    
+	    if (showfilter === "all" && keystr === ""){
+		    return usridlist;
+	    }
+	    newUsrList = usridlist.filter (function (userid) {
+		    
+		    if (showfilter === "all"){
+			    return (userid.toLowerCase ()).indexOf (keystr) === 0;
+		    }
+		    else{
+			    var ustatus = $ ("#status_" + userid).text ();
+			    if (ustatus === showfilter){
+				    if (keystr === ""){
+					    return true;
+				    }
+				    return (userid.toLowerCase ()).indexOf (keystr) === 0;
+			    }
+			    else{
+				    return false;
+			    }
+		    }
+		    
+	    });
+	    
+	    return newUsrList;
+    }
+
+    function intialList () {
+	    var html = "";
+	    for (var i = 0; i < usridlist.length; i++){
+		    html += "<div id= 'div_" + usridlist[i] + "' class = 'div_line css_usrinfo'>";
+		    
+		    html += "<div class = 'div_content css_image'>";
+		    
+		    html += "<img width = '40px' height = '40px' src = 'http://dummyimage.com/50x50/ecf0e7/5c5457.jpg&text=0x3F' id = 'img_" + usridlist[i] + "'>";
+		    
+		    html += "</div>";
+		    
+		    html += "<div class = 'div_content css_middle'>";
+		    html += "<div><a  id = 'a_" + usridlist[i] + "' target='_blank' href='http://codepen.io/cnmoon/404page'>";
+		    html += usridlist[i];
+		    html += "</a></div>";
+		    html += "<div><span id = 'com_" + usridlist[i] + "'>";
+		    html += "</span></div>";
+		    html += "</div>";
+		    
+		    html += "<div class = 'div_content css_status'><span id = 'status_" + usridlist[i] + "'>";
+		    html += "offline";
+		    html += "</span></div>";
+		    
+		    html += "</div>";
+	    }
+	    $ ("#div_list").html (html);
+    }
+
+    function refeshUsrInfo () {
+	    for (var i = 0; i < usridlist.length; i++){
+		    getUserInfo (usridlist[i]);
+	    }
+    }
+
+    function getUserInfo (usrId) {
+	    
+	    url = 'https://api.twitch.tv/kraken/streams/' + usrId;
+	    //url += '?client_id=1ndeben6r1upb6aewdfnqxxho4kyjml';
+	    
+	    //文档：https://dev.twitch.tv/docs
+	    //创建twitch账号后，在账号-设置-连接中（https://www.twitch.tv/settings/connections）
+	    //可以增加一个开发人员应用程序，从而获得访问所需要的Client-ID
+	    $.ajax ({
+	        url : url,
+	        dataType : "json",
+	        type : "get",
+	        headers : {
+		        "Client-ID" : "1ndeben6r1upb6aewdfnqxxho4kyjml"
+	        },
+	        success : function (data) {
+		        var status;
+		        var comment;
+		        var image;
+		        var linkaddress;
+		        
+		        if (data.stream === null){
+			        status = "offline";
+			        comment = "";
+			        image = "http://dummyimage.com/50x50/ecf0e7/5c5457.jpg&text=0x3F";
+			        linkaddress = "http://codepen.io/cnmoon/404page";
+		        }
+		        else if (data.stream === undefined){
+			        status = "offline"
+			        comment = "Account Closed";
+			        image = "http://dummyimage.com/50x50/ecf0e7/5c5457.jpg&text=0x3F";
+			        linkaddress = "http://codepen.io/cnmoon/404page";
+		        }
+		        else{
+			        status = "online";
+			        if (data.stream.channel.logo){
+				        image = data.stream.channel.logo;
+			        }
+			        else{
+				        image = "http://dummyimage.com/50x50/ecf0e7/5c5457.jpg&text=0x3F";
+			        }
+			        
+			        comment = data.stream.channel.game;
+			        linkaddress = data.stream.channel.url;
+		        }
+		        
+		        if (comment && comment.length > 32){
+			        comment = comment.substr (0, 29) + "...";
+		        }
+		        
+		        var usrobj = {
+		            "userid" : usrId,
+		            "status" : status,
+		            "comment" : comment,
+		            "image" : image,
+		            "linkaddress" : linkaddress
+		        };
+		        updateUser (usrobj);
+	        }
+	    });
+    }
+
+    function updateUser (usrInfo) {
+	    var imageId = "#img_" + usrInfo.userid;
+	    var comId = "#com_" + usrInfo.userid;
+	    var aId = "#a_" + usrInfo.userid;
+	    var statusId = "#status_" + usrInfo.userid;
+	    
+	    $ (imageId).attr ("src", usrInfo.image);
+	    $ (comId).text (usrInfo.comment);
+	    $ (aId).attr ("href", usrInfo.linkaddress);
+	    $ (aId).text (usrInfo.userid);
+	    $ (statusId).text (usrInfo.status);
+    }
+</script>
+</head>
+<body>
+    <div id="tvpannel">
+        <h4>CNMOON's Twitchtv Page</h4>
+        <div class="div_line">
+            <div class="div_content">
+                <input class="text" type="text" id="ipt_search" placeholder="Input to search"
+                    value="">
+            </div>
+            <div class="btn-group div_content">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    <span id="span_title">全部</span><span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#" class="li_button">全部</a></li>
+                    <li><a href="#" class="li_button">离线</a></li>
+                    <li><a href="#" class="li_button">在线</a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="div_list"></div>
+
+    </div>
+</body>
+</html>
