@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>DanmuApp</title>
+
+<link rel="stylesheet" href="../../resources/bootstrap.css" />
+<style>
+#danmupannel {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
+	width: 900px;
+	border: 1px solid rgb(229, 229, 229);
+	height: 500px;
+	border-radius: 15px;
+	background-color: #eeeeee;
+	height: 500px;
+	width: 900px;
+}
+
+#input_div {
+	margin-top: 20px;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}
+
+#ipt_message {
+	width: 400px;
+}
+
+#button_div {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}
+
+.content_span {
+	font-size: 20px
+}
+</style>
+
+<!-- <script src="https://cdn.wilddog.com/js/vendor/jquery-1.11.2.min.js"></script> -->
+<!-- <script src="https://cdn.wilddog.com/sdk/js/2.1.0/wilddog.js"></script> -->
+<script src="../../resources/jquery-latest.js"></script>
+<script src="../../resources/wilddog.js"></script>
+<script>
+	var ref;
+    var refcontent;
+    
+    var showList = [];
+    var currentline = 0;
+    
+    var maxline = 16;
+    
+    $ (document).ready (function () {
+	    
+	    var config = {
+		    syncURL : "https://cnmoondanmu.wilddogio.com"
+	    };
+	    wilddog.initializeApp (config);
+	    ref = wilddog.sync ().ref ();
+	    
+	    refcontent = wilddog.sync ().ref ('/content');
+	    
+	    refcontent.on ('child_added', function (snapshot) {
+		    showList.push (snapshot.val ());
+	    });
+	    
+	    refcontent.on ('child_removed', function (snapshot) {
+		    showList = [];
+	    });
+	    
+	    $ ("#btn_send").on ("click", function (e) {
+		    insertDanmu ();
+	    });
+	    
+	    $ ("#ipt_message").keypress (function (event) {
+		    var keycode = (event.keyCode ? event.keyCode : event.which);
+		    if (keycode == '13'){
+			    insertDanmu ();
+		    }
+	    });
+	    
+	    $ ("#btn_clear").on ("click", function (e) {
+		    // 清除数据库的值
+		    ref.remove ();
+		    ref.set ({
+			    "content" : {}
+		    });
+	    });
+	    
+	    window.setInterval (function () {
+		    
+		    if (showList.length === 0){
+			    $ ("#danmupannel").html ("");
+			    return;
+		    }
+		    
+		    var nextText = "";
+		    if (newText === ""){
+			    //从数组中随机读取一个弹幕对象
+			    //按从上到下顺序增加该弹幕对象
+			    var index = Math.floor (Math.random () * showList.length);
+			    nextText = showList[index];
+		    }
+		    else{
+			    nextText = newText;
+			    newText = "";
+		    }
+		    
+		    addObj (nextText, currentline);
+		    currentline++;
+		    if (currentline === maxline){
+			    currentline = 0;
+		    }
+	    }, 1000);
+	    
+    });
+    
+    var newText = "";
+    function insertDanmu () {
+	    var value = $ ("#ipt_message").val ();
+	    $ ("#ipt_message").val ("");
+	    //将数值增加到数据库
+	    refcontent.push (value);
+	    newText = value;
+    }
+
+    function addObj (value, line) {
+	    var moveObj = $ ("<span class ='content_span'>" + value + "</span>");
+	    var leftoffset = $ ("#danmupannel").offset ().left;
+	    
+	    $ ("#danmupannel").append (moveObj);
+	    
+	    moveObj.css ("left", leftoffset + $ ("#danmupannel").width () - moveObj.width ());
+	    moveObj.css ("top", 20 + line * 30);
+	    moveObj.css ("position", "absolute");
+	    moveObj.css ("color", "rgb(" + Math.floor (Math.random () * 256) + ", " + Math.floor (Math.random () * 256)
+	            + ", " + Math.floor (Math.random () * 256) + ")")
+
+	    moveObj.animate ({
+		    left : leftoffset - moveObj.width ()
+	    }, 20000 + Math.random () * 5000, function () {
+		    moveObj.remove ();
+	    });
+	    
+    }
+</script>
+</head>
+<body>
+    <div id="danmupannel"></div>
+    <div id="input_div">
+        <input class="text" type="text" id="ipt_message" placeholder="说点什么？" value="">
+    </div>
+    <div id="button_div">
+        <button id="btn_send" type="button" class="btn btn-primary">发射</button>
+        <button id="btn_clear" type="button" class="btn btn-info">清屏</button>
+    </div>
+</body>
+</html>
