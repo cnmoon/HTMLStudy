@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>CNMOON's Personal Portfolio Webpage</title>
+<link rel="stylesheet" href="../../resources/bs3/bootstrap.css" />
+<link rel="stylesheet"
+    href="http://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+
+<style>
+body {
+	font-family: 'microsoft yahei', Arial, sans-serif;
+}
+
+#home_div {
+	margin-top: 50px;
+	height: 730px;
+	text-align: center;
+	background:
+		url('http://pic49.nipic.com/file/20140920/19552605_173234654000_2.jpg')
+		no-repeat center center fixed;
+	background-size: cover;
+}
+
+#title_p {
+	padding-top: 200px;
+	text-align: center;
+}
+
+#title_a {
+	color: rgb(228, 218, 174);
+	text-decoration: none;
+	text-shadow: 0 3px 0 #eee;
+	text-shadow: 0 -3px 0 #123;
+	text-shadow: 0 -3px 1px #eee;
+	text-shadow: 0 3px 1px #123;
+	font-size: 80px;
+	transition: all 0.5s;
+}
+
+#title_p #title_a:hover {
+	color: #ffffff;
+}
+
+h2 {
+	color: #ccc;
+	margin-bottom: 60px;
+}
+
+.a_demo_three {
+	background-color: #3bb3e0;
+	font-size: 12px;
+	text-decoration: none;
+	color: #fff;
+	position: relative;
+	padding: 10px 20px;
+	border-left: solid 1px #2ab7ec;
+	margin-left: 35px;
+	background-image: linear-gradient(bottom, rgb(44, 160, 202) 0%,
+		rgb(62, 184, 229) 100%);
+	background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, rgb(44,
+		160, 202)), color-stop(1, rgb(62, 184, 229)));
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	box-shadow: inset 0px 1px 0px #2ab7ec, 0px 3px 0px 0px #156785;
+}
+
+.a_demo_three:active {
+	top: 3px;
+	background-image: linear-gradient(bottom, rgb(62, 184, 229) 0%,
+		rgb(44, 160, 202) 100%);
+	background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, rgb(62,
+		184, 229)), color-stop(1, rgb(44, 160, 202)));
+	box-shadow: inset 0px 1px 0px #2ab7ec, 0px 2px 0px 0px #156785;
+}
+
+.a_demo_three::before {
+	background-color: #2561b4;
+	content: "1";
+	width: 35px;
+	height: 34px;
+	position: absolute;
+	display: block;
+	padding-top: 8px;
+	padding-bottom: 10px;
+	top: 0px;
+	left: -36px;
+	font-size: 16px;
+	font-weight: bold;
+	color: #8fd1ea;
+	text-shadow: 1px 1px 0px #07526e;
+	border-right: solid 1px #07526e;
+	background-image: linear-gradient(bottom, rgb(10, 94, 125) 0%,
+		rgb(14, 139, 184) 100%);
+	background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, rgb(10, 94
+		, 125)), color-stop(1, rgb(14, 139, 184)));
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	box-shadow: inset 0px 1px 0px #2ab7ec, 0px 3px 0px 0px #032b3a;
+	top: 0px;
+}
+
+.a_demo_three:active::before {
+	top: -3px;
+	box-shadow: inset 0px 1px 0px #2ab7ec, 0px 5px 0px 0px #032b3a, 1px 1px
+		0px 0px #044a64, 2px 2px 0px 0px #044a64, 2px 5px 0px 0px #044a64, 6px
+		4px 2px #0b698b;
+}
+
+#a_demo_2::before {
+	content: "2";
+}
+
+#a_demo_3::before {
+	content: "3";
+}
+
+#a_demo_4::before {
+	content: "4";
+}
+
+.row {
+	width: 100%;
+}
+
+#about_div {
+	margin-top: 0px;
+	height: 730px;
+	text-align: center;
+	background:
+		url('http://pic49.nipic.com/file/20140920/19552605_172708728000_2.jpg')
+		no-repeat center center fixed;
+	background-size: cover;
+}
+
+.about_title {
+	color: #fff;
+	font-size: 40px;
+	text-align: left;
+	padding-left: 40px;
+	padding-top: 90px;
+	margin-bottom: 30px;
+}
+
+#about_line {
+	display: flex;
+}
+
+#about_text {
+	padding-left: 40px;
+	padding-right: 20px;
+	text-align: left;
+	color: #fff;
+}
+
+#about_pic {
+	width: 400px;
+	height: 400px;
+	border-radius: 200px;
+	border: solid 10px;
+	border-color: #ddd;
+}
+
+#about_pic_div {
+	padding-right: 30px;
+}
+
+#portfolio_div {
+	margin-top: 0px;
+	height: 730px;
+	text-align: center;
+	background:
+		url('http://pic49.nipic.com/file/20140920/19552605_173150630000_2.jpg')
+		no-repeat center center fixed;
+	background-size: cover;
+}
+
+.img_line {
+	display: flex;
+	justify-content: center;
+	text-align: center;
+}
+
+.portshow {
+	width: 320px;
+	height: 180px;
+	margin-left: 20px;
+	margin-right: 20px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	border: solid 1px;
+	border-color: #fff;
+	border-radius: 5px;
+}
+
+.portshow a {
+	border-color: #fff;
+}
+
+.single_proj_div {
+	margin: 0px 0px 10px 10px;
+	padding: 0px 0px 0px 0px;
+	border-radius: 5px;
+}
+
+.img_hover {
+	background: rgba(0, 0, 0, 0.7);
+	width: 320px;
+	height: 180px;
+	opacity: 0;
+	transition: all ease .5s;
+	position: absolute;
+	margin-left: 20px;
+	margin-right: 20px;
+	margin-top: -180px;
+	padding-top: 70px;
+}
+
+.img_hover a {
+	color: #bbb;
+}
+
+.img_hover:hover {
+	opacity: 1;
+}
+
+.single_proj_textdiv a {
+	color: #fff;
+}
+
+.single_proj_textdiv {
+	margin-left: 20px;
+	text-align: center;
+	margin-bottom: 10px;
+	margin-top: 8px;
+	width: 320px;
+	color: #fff;
+}
+
+#portfolio_comment {
+	color: #EEE;
+	font-size: 20px;
+	text-align: left;
+	padding-left: 40px;
+	margin-bottom: 30px;
+	margin-top: 40px;
+}
+
+#contact_div {
+	margin-top: 0px;
+	height: 660px;
+	text-align: center;
+	background:
+		url('http://pic49.nipic.com/file/20140920/19552605_172627150000_2.jpg')
+		no-repeat center center fixed;
+	background-size: cover;
+}
+
+#contact_title {
+	color: #fff;
+	font-size: 40px;
+	text-align: left;
+	padding-left: 330px;
+	padding-top: 420px;
+}
+
+#contact_title a {
+	color: #fff;
+	font-size: 40px;
+	text-align: left;
+	padding-top: 30px;
+}
+
+.contact_links {
+	margin-left: 240px;
+	margin-top: 200px;
+}
+
+.contact_link {
+	margin-bottom: 80px;
+}
+
+.contact_line {
+	display: flex;
+}
+
+.footer {
+	position: absolute;
+	width: 100%;
+	height: 50px;
+	background-color: #f5f5f5;
+}
+
+body>.container {
+	padding: 50px 15px 0;
+}
+
+.container .text-muted {
+	margin: 15px 0;
+}
+
+.footer>.container {
+	padding-right: 15px;
+	padding-left: 15px;
+}
+
+#bottom_div {
+	text-align: right;
+	margin-right: 30px;
+}
+
+#title_p #title_a:hover {
+	animation: neon3 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes neon3 {
+  from {
+    text-shadow: 0 0 10px #fff,
+               0 0 20px  #fff,
+               0 0 30px  #fff,
+               0 0 40px  #FFDD1B,
+               0 0 70px  #FFDD1B,
+               0 0 80px  #FFDD1B,
+               0 0 100px #FFDD1B,
+               0 0 150px #FFDD1B;
+  }
+  to {
+    text-shadow: 0 0 5px #fff,
+               0 0 10px #fff,
+               0 0 15px #fff,
+               0 0 20px #FFDD1B,
+               0 0 35px #FFDD1B,
+               0 0 40px #FFDD1B,
+               0 0 50px #FFDD1B,
+               0 0 75px #FFDD1B;
+  }
+}
+
+</style>
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top topnav navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">中国月亮</a>
+            </div>
+            <div id="navbar" class="navbar-nav navbar-right">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#a_home">主页</a></li>
+                    <li><a href="#a_about">关于</a></li>
+                    <li><a href="#a_portfolio">作品</a></li>
+                    <li><a href="#a_contact">联系方式</a></li>
+                </ul>
+
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+        <!--/.container-fluid -->
+    </nav>
+    <a id="a_home"></a>
+    <div id="home_div">
+        <p id="title_p">
+            <a id="title_a" href="#">中国月亮的个人主页</a>
+        </p>
+        <h2>长期加班且单位不能上网的人表示，以下这些链接里其实没啥东西。(╯‵□′)╯︵┻━┻</h2>
+        <div class="row">
+            <div class="col-xs-2"></div>
+            <div class="col-xs-2">
+                <a class="a_demo_three" id="a_demo_1" href="https://twitter.com/China__Moon"
+                    target="_blank"><i class="fa fa-twitter fa-fw"></i> Twitter</a>
+            </div>
+            <div class="col-xs-2">
+                <a class="a_demo_three" id="a_demo_2" href="https://github.com/cnmoon/"
+                    target="_blank"><i class="fa fa-github fa-fw"></i> GitHub</a>
+            </div>
+            <div class="col-xs-2">
+                <a class="a_demo_three" id="a_demo_3" href="http://www.linkedin.com/in/cnmoon"
+                    target="_blank"><i class="fa fa-linkedin fa-fw"></i> Linkedin</a>
+            </div>
+            <div class="col-xs-2">
+                <a class="a_demo_three" id="a_demo_4" href="https://www.freecodecamp.cn/cnmoon/"
+                    target="_blank"><i class="fa fa-fire fa-fw"></i> freeCodeCamp</a>
+            </div>
+            <div class="col-xs-2"></div>
+        </div>
+
+    </div>
+    <a id="a_about"></a>
+    <div id="about_div">
+
+        <div class="about_title">
+            <p>记流水账碎碎念念我自己</p>
+        </div>
+
+        <div id="about_line">
+            <div id="about_text">
+                <p>中学读书不用功，但家教甚严，成绩勉强维持中等，高考前爆发，获得了在好专业和好学校之间进行选择的权利，最终选择了自己喜欢的计算机专业，学校只好选择本省的一本师范院校。大学时别的学得一塌糊涂，所幸专业没怎么拉下。</p>
+                <p>师范大学毕业后，教了两年书，和同事学生相处甚欢，但是还是觉得自己有点潜力可挖，第三年决定考研，目标北航，后遇高人指点，改报航天五院，专业依然是计算机。那一年考研题目颇为简单，居然上了400分大线，也被五院顺利录取。</p>
+                <p>虽然录取过程颇为顺利，在职考研过程还是被虐的很惨的，所以读研时也非常珍惜这个机会，大学时没学好的数学、英语依赖考研的基础和研究生期间的努力学习勉强算是追了上来，导师和老师也十分看得起我，各种仙人指路，在强者如林的五院研究生部（神舟学院）居然混到了所有的奖学金，课程奖排名第一。</p>
+                <p>由于是公费定向生，读研期间不用担心找工作的事，研究生第二年就被摁着写卫星地面站工业控制系统的代码，面对前辈留下的近20万行代码，边干项目边重构，就这样“专注”了三年多，最后在离开一线技术岗前，终于按照自己的想法，与同事们一起完成了整个软件架构的重构和性能优化，时隔6年，这些组件依然能满足新项目的功能、性能和可扩展性需要。</p>
+                <p>随后就是进入管理层，做为QA审查天上、地下各个领域的软件代码和文档，为公司建立各种规章制度，其中包括大名鼎鼎的CMMI体系（解放军叔叔本土化后称为GJB5000A），离任前连滚带爬帮助公司通过了国内GJB5000A最高级，也就是三级评价。最后还把一些实践经验形成了航天器软件的文档编写规范，算是为祖国航天事业添了点砖加了块瓦。</p>
+                <p>离开纯管理岗后，回到业务部门又开始为组织开疆扩土，和一帮懵懂的小弟一块儿试图赶上互联网的大潮，互联网产品的各项技术、持续集成的方法论和工具体系也零零碎碎用了不少，也算完成了几个大型项目。</p>
+                <p>但是，不论怎么说，毕竟PPT、沟通协调的时间多了，直接写代码的机会越来越少，特别是前端开发的技术和10年前相比，简直是面目全非，读起代码来，竟然有几分不知道如何下手，伪码农心中不禁有些惶恐。最近难得偷出点时间，发现freeCodeCamp是个解决我问题的好地方，仗着自己还有几分功力残留，竟然不小心把前端题做了个精光，也就有了这个页面。</p>
+                <p>欲知后事如何，我还是继续做革命的万金油吧。</p>
+            </div>
+            <div id="about_pic_div">
+                <img id="about_pic"
+                    src="http://f.hiphotos.baidu.com/baike/c0%3Dbaike80%2C5%2C5%2C80%2C26/sign=98660991ac51f3ded7bfb136f5879b7a/78310a55b319ebc4b235b7c28126cffc1e17161f.jpg" />
+            </div>
+        </div>
+    </div>
+    <a id="a_portfolio"></a>
+    <div id="portfolio_div">
+
+
+        <div class="about_title">
+            <p>我的作品</p>
+        </div>
+        <div class="img_line">
+
+            <div class="single_proj_div">
+                <div class="single_proj_imgdiv">
+                    <img class="portshow" src="https://pbs.twimg.com/media/CuEkCy0VYAAsdiL.jpg" />
+                    <div class="img_hover">
+                        <a href="http://codepen.io/cnmoon/pen/WGRxPG" target="_blank"><i
+                            class="fa fa-pencil-square-o fa-3x"></i></a> <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <a href="http://codepen.io/cnmoon/full/WGRxPG" target="_blank"><i
+                            class="fa fa-eye fa-3x"></i></a>
+                    </div>
+                </div>
+                <div class="single_proj_textdiv row">
+                    <div class="col-xs-6">Local Weather</div>
+                    <div class="col-xs-2"></div>
+                    <div class="col-xs-2">
+                        <a href="http://codepen.io/cnmoon/pen/WGRxPG" target="_blank"><i
+                            class="fa fa-pencil-square-o"></i></a>
+                    </div>
+                    <div class="col-xs-2">
+                        <a href="http://codepen.io/cnmoon/full/WGRxPG" target="_blank"><i
+                            class="fa fa-eye"></i></a>
+                    </div>
+                </div>
+            </div>
+            <!-- 1st pic -->
+
+
+            <div class="single_proj_div">
+                <div class="single_proj_imgdiv">
+                    <img class="portshow" src="https://pbs.twimg.com/media/CuEkCyyVYAAPMNS.jpg" />
+                    <div class="img_hover">
+                        <a href="http://codepen.io/cnmoon/pen/bwwogJ" target="_blank"><i
+                            class="fa fa-pencil-square-o fa-3x"></i></a> <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <a href="http://codepen.io/cnmoon/full/bwwogJ" target="_blank"><i
+                            class="fa fa-eye fa-3x"></i></a>
+                    </div>
+                </div>
+                <div class="single_proj_textdiv row">
+                    <div class="col-xs-6">Simon Game</div>
+                    <div class="col-xs-2"></div>
+                    <div class="col-xs-2">
+                        <a href="http://codepen.io/cnmoon/pen/bwwogJ" target="_blank"><i
+                            class="fa fa-pencil-square-o"></i></a>
+                    </div>
+                    <div class="col-xs-2">
+                        <a href="http://codepen.io/cnmoon/full/bwwogJ" target="_blank"><i
+                            class="fa fa-eye"></i></a>
+                    </div>
+                </div>
+            </div>
+            <!-- 2nd pic -->
+
+            <div class="single_proj_div">
+                <div class="single_proj_imgdiv">
+                    <img class="portshow" src="https://pbs.twimg.com/media/CuEkCyzUkAAcaXG.jpg" />
+                    <div class="img_hover">
+                        <a href="http://codepen.io/cnmoon/pen/xEOgvx" target="_blank"><i
+                            class="fa fa-pencil-square-o fa-3x"></i></a> <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <a href="http://codepen.io/cnmoon/full/xEOgvx" target="_blank"><i
+                            class="fa fa-eye fa-3x"></i></a>
+                    </div>
+                </div>
+                <div class="single_proj_textdiv row">
+                    <div class="col-xs-6">JS Caculator</div>
+                    <div class="col-xs-2"></div>
+                    <div class="col-xs-2">
+                        <a href="http://codepen.io/cnmoon/pen/xEOgvx" target="_blank"><i
+                            class="fa fa-pencil-square-o"></i></a>
+                    </div>
+                    <div class="col-xs-2">
+                        <a href="http://codepen.io/cnmoon/full/xEOgvx" target="_blank"><i
+                            class="fa fa-eye"></i></a>
+                    </div>
+                </div>
+            </div>
+            <!-- 3rd pic -->
+        </div>
+
+        <div class="img_line">
+
+
+            <div class="single_proj_div">
+                <div class="single_proj_imgdiv">
+                    <img class="portshow" src="https://pbs.twimg.com/media/CuEkOtoVYAAfXqX.jpg" />
+                    <div class="img_hover">
+                        <a href="http://codepen.io/cnmoon/pen/WGRVwo" target="_blank"><i
+                            class="fa fa-pencil-square-o fa-3x"></i></a> <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <a href="http://codepen.io/cnmoon/full/WGRVwo" target="_blank"><i
+                            class="fa fa-eye fa-3x"></i></a>
+                    </div>
+                </div>
+                <div class="single_proj_textdiv row">
+                    <div class="col-xs-6">Wikipedia Viewer</div>
+                    <div class="col-xs-2"></div>
+                    <div class="col-xs-2">
+                        <a href="http://codepen.io/cnmoon/pen/WGRVwo" target="_blank"><i
+                            class="fa fa-pencil-square-o"></i></a>
+                    </div>
+                    <div class="col-xs-2">
+                        <a href="http://codepen.io/cnmoon/full/WGRVwo" target="_blank"><i
+                            class="fa fa-eye"></i></a>
+                    </div>
+                </div>
+            </div>
+            <!-- 4st pic -->
+
+
+            <div class="single_proj_div">
+                <div class="single_proj_imgdiv">
+                    <img class="portshow" src="https://pbs.twimg.com/media/CuEkOtuVYAAFL3z.jpg" />
+                    <div class="img_hover">
+                        <a href="http://codepen.io/cnmoon/pen/NRvjpb" target="_blank"><i
+                            class="fa fa-pencil-square-o fa-3x"></i></a> <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <a href="http://codepen.io/cnmoon/full/NRvjpb" target="_blank"><i
+                            class="fa fa-eye fa-3x"></i></a>
+                    </div>
+                </div>
+                <div class="single_proj_textdiv row">
+                    <div class="col-xs-6">Twitchtv Page</div>
+                    <div class="col-xs-2"></div>
+                    <div class="col-xs-2">
+                        <a href="http://codepen.io/cnmoon/pen/NRvjpb" target="_blank"><i
+                            class="fa fa-pencil-square-o"></i></a>
+                    </div>
+                    <div class="col-xs-2">
+                        <a href="http://codepen.io/cnmoon/full/NRvjpb" target="_blank"><i
+                            class="fa fa-eye"></i></a>
+                    </div>
+                </div>
+            </div>
+            <!-- 5th pic -->
+
+            <div class="single_proj_div">
+                <div class="single_proj_imgdiv">
+                    <img class="portshow" src="https://pbs.twimg.com/media/CuEkOtoUMAEhhZi.jpg" />
+                    <div class="img_hover">
+                        <a href="http://codepen.io/cnmoon/pen/gwrddz" target="_blank"><i
+                            class="fa fa-pencil-square-o fa-3x"></i></a> <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <a href="http://codepen.io/cnmoon/full/gwrddz" target="_blank"><i
+                            class="fa fa-eye fa-3x"></i></a>
+                    </div>
+                </div>
+                <div class="single_proj_textdiv row">
+                    <div class="col-xs-6">Pomodoro Clock</div>
+                    <div class="col-xs-2"></div>
+                    <div class="col-xs-2">
+                        <a href="http://codepen.io/cnmoon/pen/gwrddz" target="_blank"><i
+                            class="fa fa-pencil-square-o"></i></a>
+                    </div>
+                    <div class="col-xs-2">
+                        <a href="http://codepen.io/cnmoon/full/gwrddz" target="_blank"><i
+                            class="fa fa-eye"></i></a>
+                    </div>
+                </div>
+            </div>
+            <!-- 6th pic -->
+
+        </div>
+
+
+        <div id="portfolio_comment">
+            <p>To 保密处的同志们，看到这个页面不要担心，我们的保密体系没有问题，这里贴的都是freeCodeCamp的练习作品。</p>
+        </div>
+
+    </div>
+    <a id="a_contact"></a>
+    <div id="contact_div">
+
+
+        <div class="contact_line">
+            <div>
+                <div id="contact_title">
+                    <span>和我联系:</span><br> <a href="mailto:cnmoon@qq.com">cnmoon@qq.com</a>
+                </div>
+            </div>
+            <div class="contact_links">
+                <div class="contact_link">
+                    <a class="a_demo_three" id="a_demo_1" href="https://twitter.com/China__Moon"
+                        target="_blank"><i class="fa fa-twitter fa-fw"></i> Twitter</a>
+                </div>
+                <div class="contact_link">
+                    <a class="a_demo_three" id="a_demo_2" href="https://github.com/cnmoon/"
+                        target="_blank"><i class="fa fa-github fa-fw"></i> GitHub</a>
+                </div>
+                <div class="contact_link">
+                    <a class="a_demo_three" id="a_demo_3" href="http://www.linkedin.com/in/cnmoon"
+                        target="_blank"><i class="fa fa-linkedin fa-fw"></i> Linkedin</a>
+                </div>
+                <div class="contact_link">
+                    <a class="a_demo_three" id="a_demo_4" href="https://www.freecodecamp.cn/cnmoon/"
+                        target="_blank"><i class="fa fa-fire fa-fw"></i> freeCodeCamp</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <footer class="footer">
+        <div id="bottomlink">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#a_home">主页</a></li>
+                <li><a href="#a_about">关于</a></li>
+                <li><a href="#a_portfolio">作品</a></li>
+                <li><a href="#a_contact">联系方式</a></li>
+            </ul>
+        </div>
+        <div id="bottom_div" class="container">
+            <div class="text-muted">Copyright: 没有，随便用。</div>
+        </div>
+
+    </footer>
+</body>
+</html>
